@@ -3,29 +3,16 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import PuppyCard from "@/components/PuppyCard";
 
-type Puppy = {
-  id: string;
-  name: string;
-  gender: string;
-  dob: string;
-  color: string;
-  description: string;
-  status: string;
-  featured: boolean;
-  image_url: string;
-  created_at: string;
-};
-
-export default function Home() {
-  const [puppies, setPuppies] = useState<Puppy[]>([]);
+export default function AvailablePage() {
+  const [puppies, setPuppies] = useState<any[]>([]);
 
   useEffect(() => {
     async function fetchPuppies() {
       const { data, error } = await supabase
         .from("puppies")
         .select(`*, puppy_images (image_url)`)
-        .eq("featured", true)
-        .eq("status", "available");
+        .eq("status", "available")
+        .order("created_at", { ascending: false });
       console.log("DATA:", data);
       if (data) {
         data.forEach((puppy: any) => {
@@ -41,9 +28,9 @@ export default function Home() {
   return (
     <main>
       <section className="px-6 py-20 max-w-6xl mx-auto">
-        <h2 className="text-4xl font-serif mb-12 text-center">
-          Featured Puppies
-        </h2>
+        <h1 className="text-4xl font-serif mb-12 text-center">
+          Available Puppies
+        </h1>
         <div className="grid md:grid-cols-3 gap-10">
           {puppies.map((puppy) => (
             <PuppyCard key={puppy.id} puppy={{ ...puppy, imageUrl: puppy.image_url }} />
