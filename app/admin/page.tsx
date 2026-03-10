@@ -25,6 +25,12 @@ const siteCards = [
     title: "Site Settings",
     sub: "Update hero image and site content",
   },
+  {
+    href: "/admin/pack",
+    icon: "🐾",
+    title: "Manage The Pack",
+    sub: "Add, remove or update pack member photos",
+  },
 ];
 
 const shopCards = [
