@@ -10,6 +10,7 @@ export default function AddPuppy() {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("Male");
   const [color, setColor] = useState("");
+  const [dob, setDob] = useState("");
   const [description, setDescription] = useState("");
   const [featured, setFeatured] = useState(false);
   const [images, setImages] = useState<FileList | null>(null);
@@ -25,6 +26,7 @@ export default function AddPuppy() {
           name,
           gender,
           color,
+          dob: dob || null,
           description,
           status: "available",
           featured,
@@ -48,7 +50,8 @@ export default function AddPuppy() {
           .from("puppy-images")
           .upload(filePath, file);
         if (uploadError) {
-          alert("Error uploading image: " + file.name);
+          console.error("Supabase upload error:", uploadError);
+          alert(`Error uploading image: ${file.name}\n${uploadError.message}`);
           return;
         }
         const { data } = supabase.storage
@@ -91,6 +94,12 @@ export default function AddPuppy() {
           className="w-full p-3 rounded-lg border"
           onChange={(e) => setColor(e.target.value)}
         />
+        <label className="block text-sm opacity-70 -mb-3">Date of Birth</label>
+        <input
+          type="date"
+          className="w-full p-3 rounded-lg border"
+          onChange={(e) => setDob(e.target.value)}
+        />
         <textarea
           placeholder="Description"
           className="w-full p-3 rounded-lg border"
@@ -108,7 +117,7 @@ export default function AddPuppy() {
           multiple
           onChange={(e) => setImages(e.target.files)}
         />
-        <button className="px-6 py-3 bg-(--accent) rounded-lg text-black">
+        <button className="px-6 py-3 bg-yellow-500 rounded-lg text-black">
           Create Puppy
         </button>
       </form>

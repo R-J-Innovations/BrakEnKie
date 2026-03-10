@@ -7,18 +7,20 @@ import { useRouter } from "next/navigation";
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
 
-  async function handleLogin(e: any) {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    setErrorMsg("");
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      alert("Login failed");
+      setErrorMsg(error.message);
     } else {
       router.push("/admin");
     }
@@ -28,9 +30,12 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleLogin}
-        className="bg-[var(--card-light)] dark:bg-[var(--card-dark)] p-10 rounded-2xl shadow-lg w-96"
+        className="bg-(--card-light) dark:bg-(--card-dark) p-10 rounded-2xl shadow-lg w-96"
       >
         <h1 className="text-2xl font-serif mb-6 text-center">Admin Login</h1>
+        {errorMsg && (
+          <div className="mb-4 text-red-600 text-center">{errorMsg}</div>
+        )}
 
         <input
           type="email"
@@ -46,7 +51,7 @@ export default function AdminLogin() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full py-3 bg-[var(--accent)] rounded-lg font-medium text-black">
+        <button className="w-full py-3 bg-(--accent) rounded-lg font-medium text-black">
           Login
         </button>
       </form>

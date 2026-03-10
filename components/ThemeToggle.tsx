@@ -12,30 +12,12 @@ function getInitialTheme(): Theme {
   return stored === "dark" ? "dark" : "light";
 }
 
-function StandingDogIcon(props: React.SVGProps<SVGSVGElement>) {
+function SunIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
       <path
-        d="M4 14c2-2 4-3 7-3h4c2.5 0 4 1.5 5 3"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M7 11V8c0-1.5 1.2-2.5 2.7-2.5h1.8c1.5 0 2.7 1 2.7 2.5v3"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 14v5M10 14v5M15 14v5M19 14v5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <circle cx="9.2" cy="8.6" r="0.6" fill="currentColor" />
-      <path
-        d="M6.5 7.5 5 6"
+        d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
@@ -44,50 +26,40 @@ function StandingDogIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function SleepingDogIcon(props: React.SVGProps<SVGSVGElement>) {
+function MoonIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
       <path
-        d="M5 15c2.5-2 5-3 8-3 3.5 0 5.5 1 6 3"
+        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
-      />
-      <path
-        d="M7 15c0 2 1.5 4 5 4s5-2 5-4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9 10c.7-.7 1.4-.7 2.1 0M12.3 10c.7-.7 1.4-.7 2.1 0"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M15.5 8.5c1 0 2-.5 2.5-1.5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M16.8 5.6h2.6M16.8 4.1h1.8"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
+  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    setMounted(true);
+
+    const stored = localStorage.getItem("theme");
+    const initial: Theme = stored === "dark" ? "dark" : "light";
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     localStorage.setItem("theme", theme);
     document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
+  }, [theme, mounted]);
+
+  if (!mounted) return null;
 
   const toggleTheme = () => {
     setTheme((t) => (t === "light" ? "dark" : "light"));
@@ -104,9 +76,9 @@ export default function ThemeToggle() {
       className="inline-flex h-10 w-10 items-center justify-center rounded-lg border text-sm transition-colors hover:bg-black/5 dark:hover:bg-white/10"
     >
       {isDark ? (
-        <SleepingDogIcon className="h-5 w-5" />
+        <SunIcon className="h-5 w-5" />
       ) : (
-        <StandingDogIcon className="h-5 w-5" />
+        <MoonIcon className="h-5 w-5" />
       )}
     </button>
   );

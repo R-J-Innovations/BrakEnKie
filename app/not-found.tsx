@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-(--bg) text-(--text) px-6 py-20">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-6 py-20">
       <div className="max-w-5xl mx-auto">
-        <div className="rounded-3xl bg-(--card) shadow-md overflow-hidden">
+        <div className="rounded-3xl bg-yellow-100 shadow-md overflow-hidden">
           {/* Sky + field scene */}
           <div className="relative h-[340px]">
             <div className="absolute inset-0 bg-gradient-to-b from-sky-200 to-sky-50 dark:from-slate-900 dark:to-slate-950" />
@@ -77,7 +77,7 @@ export default function NotFound() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/"
-                className="px-8 py-3 bg-(--accent) rounded-lg text-black font-medium"
+                className="px-8 py-3 bg-yellow-500 rounded-lg text-black font-medium"
               >
                 Go Home
               </Link>
@@ -90,14 +90,6 @@ export default function NotFound() {
             </div>
           </div>
         </div>
-
-        {/* Local keyframes (scoped) */}
-        <style>{`
-          @keyframes run {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(100vw + 240px)); }
-          }
-        `}</style>
       </div>
     </main>
   );

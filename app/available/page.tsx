@@ -8,18 +8,11 @@ export default function AvailablePage() {
 
   useEffect(() => {
     async function fetchPuppies() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("puppies")
-        .select(`*, puppy_images (image_url)`)
+        .select("*, puppy_images (image_url)")
         .eq("status", "available")
         .order("created_at", { ascending: false });
-      console.log("DATA:", data);
-      if (data) {
-        data.forEach((puppy: any) => {
-          console.log("puppy_images for", puppy.name, puppy.puppy_images);
-        });
-      }
-      if (error) console.log("ERROR:", error);
       if (data) setPuppies(data);
     }
     fetchPuppies();
@@ -28,14 +21,20 @@ export default function AvailablePage() {
   return (
     <main>
       <section className="px-6 py-20 max-w-6xl mx-auto">
-        <h1 className="text-4xl font-serif mb-12 text-center">
-          Available Puppies
-        </h1>
-        <div className="grid md:grid-cols-3 gap-10">
-          {puppies.map((puppy) => (
-            <PuppyCard key={puppy.id} puppy={{ ...puppy, imageUrl: puppy.image_url }} />
-          ))}
-        </div>
+        <h1 className="text-4xl font-serif mb-4 text-center">Available Puppies</h1>
+        <p className="text-center opacity-60 mb-12 max-w-xl mx-auto">
+          Current availability changes quickly. If you&apos;d like to reserve, please request a
+          private consultation.
+        </p>
+        {puppies.length === 0 ? (
+          <p className="text-center opacity-40 py-20">No puppies available right now. Check back soon.</p>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-10">
+            {puppies.map((puppy) => (
+              <PuppyCard key={puppy.id} puppy={puppy} />
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
