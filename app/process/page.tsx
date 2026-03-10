@@ -23,37 +23,54 @@ const steps = [
 
 export default function ProcessPage() {
   return (
-    <main className="px-6 py-20 max-w-4xl mx-auto">
-      <h1 className="text-5xl font-serif mb-4 text-center">Private Reservation</h1>
-      <p className="text-center opacity-60 mb-16 text-lg max-w-xl mx-auto leading-relaxed">
-        We keep reservations personal and intentional. Every puppy goes to a home we trust.
-      </p>
+    <main className="px-6 py-24 max-w-4xl mx-auto">
 
-      <div className="space-y-6 mb-16">
+      {/* Header */}
+      <div className="text-center mb-20">
+        <p className="text-[11px] tracking-[0.55em] uppercase text-[var(--accent)] mb-5 font-sans opacity-70">
+          The Process
+        </p>
+        <h1 className="text-5xl md:text-6xl font-serif font-light mb-8">Private Reservation</h1>
+        <div className="flex items-center justify-center gap-5 mb-8">
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+          <div className="w-1.5 h-1.5 bg-[var(--accent)]/40 rotate-45 flex-shrink-0" />
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+        </div>
+        <p className="opacity-45 max-w-md mx-auto leading-relaxed text-base font-light">
+          We keep reservations personal and intentional. Every puppy goes to a home we trust.
+        </p>
+      </div>
+
+      {/* Steps */}
+      <div className="space-y-5 mb-16">
         {steps.map((step) => (
           <div
             key={step.number}
-            className="flex gap-8 items-start p-8 bg-[var(--card)] rounded-2xl shadow"
+            className="flex gap-10 items-start p-10 bg-[var(--card)] border border-[var(--accent)]/10 group hover:border-[var(--accent)]/22 transition-all duration-300"
           >
-            <span className="text-5xl font-serif opacity-20 flex-shrink-0 leading-none">
+            <span className="text-6xl font-serif font-light text-[var(--accent)] opacity-20 flex-shrink-0 leading-none group-hover:opacity-35 transition-opacity duration-300">
               {step.number}
             </span>
-            <div>
-              <h3 className="text-xl font-serif mb-3">{step.title}</h3>
-              <p className="opacity-60 leading-relaxed">{step.description}</p>
+            <div className="pt-2">
+              <h3 className="text-xl font-serif font-light mb-3">{step.title}</h3>
+              <p className="opacity-50 leading-relaxed text-sm font-sans">{step.description}</p>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="text-center bg-[var(--card)] rounded-3xl p-12">
-        <h2 className="text-3xl font-serif mb-4">Ready to begin?</h2>
-        <p className="opacity-60 mb-8 max-w-md mx-auto leading-relaxed">
+      {/* CTA */}
+      <div className="text-center bg-[var(--card)] border border-[var(--accent)]/10 p-14">
+        <p className="text-[11px] tracking-[0.45em] uppercase text-[var(--accent)] mb-6 font-sans opacity-70">
+          Ready to Begin?
+        </p>
+        <h2 className="text-3xl md:text-4xl font-serif font-light mb-6">Start the conversation</h2>
+        <p className="opacity-45 mb-10 max-w-sm mx-auto leading-relaxed font-light">
           Reach out via WhatsApp and we&apos;ll guide you through the rest.
         </p>
         <Link
           href="/contact"
-          className="inline-block px-8 py-4 bg-[var(--accent)] rounded-xl font-medium text-black hover:opacity-90 transition-opacity"
+          className="inline-block px-10 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.25em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
         >
           Request a Consultation
         </Link>

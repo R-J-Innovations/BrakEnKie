@@ -4,27 +4,33 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-black/10 dark:border-white/10 mt-20 py-12 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-start gap-8">
-        <div>
-          <h3 className="font-serif text-xl mb-2">BrakEnKie</h3>
-          <p className="text-sm opacity-50 max-w-xs leading-relaxed">
-            French Bulldogs raised with love on our farm in the Cradle of Humankind, South Africa.
-          </p>
+    <footer className="mt-24 border-t border-[var(--accent)]/15">
+      <div className="max-w-6xl mx-auto px-8 py-16">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+          <div className="max-w-xs">
+            <h3 className="font-serif text-2xl font-light tracking-[0.1em] uppercase mb-4">
+              BrakEnKie
+            </h3>
+            <p className="text-sm opacity-40 leading-relaxed tracking-wide">
+              French Bulldogs raised with love on our farm in the Cradle of Humankind, South Africa.
+            </p>
+          </div>
+
+          <nav className="flex flex-wrap gap-x-10 gap-y-4 text-[11px] tracking-[0.25em] uppercase font-sans">
+            <Link href="/available" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Available</Link>
+            <Link href="/process" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Reservations</Link>
+            <Link href="/about" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Our Story</Link>
+            <Link href="/shop" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Shop</Link>
+            <Link href="/education" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Education</Link>
+            <Link href="/contact" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Contact</Link>
+          </nav>
         </div>
 
-        <nav className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
-          <Link href="/available" className="opacity-50 hover:opacity-100 transition-opacity">Available</Link>
-          <Link href="/process" className="opacity-50 hover:opacity-100 transition-opacity">Reservations</Link>
-          <Link href="/about" className="opacity-50 hover:opacity-100 transition-opacity">Our Story</Link>
-          <Link href="/shop" className="opacity-50 hover:opacity-100 transition-opacity">Shop</Link>
-          <Link href="/education" className="opacity-50 hover:opacity-100 transition-opacity">Education</Link>
-          <Link href="/contact" className="opacity-50 hover:opacity-100 transition-opacity">Contact</Link>
-        </nav>
-      </div>
+        <div className="h-px bg-[var(--accent)]/10 mb-8" />
 
-      <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-black/10 dark:border-white/10">
-        <p className="text-xs opacity-30">&copy; {year} BrakEnKie. All rights reserved.</p>
+        <p className="text-[11px] tracking-[0.3em] uppercase opacity-25 font-sans">
+          &copy; {year} BrakEnKie. All rights reserved.
+        </p>
       </div>
     </footer>
   );

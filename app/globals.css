@@ -1,17 +1,21 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode (toggled via .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --bg-light: #F5EFE6;
-  --card-light: #FFFFFF;
-  --text-light: #2B2B2B;
+  --bg-light: #FAF5EE;
+  --card-light: #FFFDF8;
+  --text-light: #231F18;
 
-  --bg-dark: #111111;
-  --card-dark: #1C1C1C;
-  --text-dark: #EDEDED;
+  --bg-dark: #0D0B08;
+  --card-dark: #161310;
+  --text-dark: #EDE8DF;
 
-  --accent: #C6A969;
+  --accent: #B8935A;
+  --accent-hover: #C9A46A;
 
-  /* Active theme tokens (light by default) */
+  /* Active theme tokens */
   --bg: var(--bg-light);
   --card: var(--card-light);
   --text: var(--text-light);
@@ -23,13 +27,65 @@
   --text: var(--text-dark);
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply transition-colors duration-300;
+  transition: background-color 0.4s ease, color 0.4s ease;
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Luxury serif for all headings and .font-serif elements */
+.font-serif,
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+}
+
+/* ── Animations ───────────────────────────────────────── */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-28px); }
+}
+
+@keyframes float-alt {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  33%       { transform: translateY(-20px) translateX(14px); }
+  66%       { transform: translateY(-10px) translateX(-10px); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0)    scale(1); }
+  25%       { transform: translate(18px, -18px) scale(1.03); }
+  50%       { transform: translate(10px, -30px) scale(1); }
+  75%       { transform: translate(-12px, -14px) scale(0.97); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes run {
-  0% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
   100% { transform: translateX(calc(100vw + 240px)); }
 }
+
+.animate-float     { animation: float     7s ease-in-out infinite; }
+.animate-float-alt { animation: float-alt 11s ease-in-out infinite; }
+.animate-drift     { animation: drift     15s ease-in-out infinite; }
+.animate-fade-up   { animation: fadeUp    0.9s ease-out forwards; }
+.animate-fade-in   { animation: fadeIn    1.2s ease-out forwards; }

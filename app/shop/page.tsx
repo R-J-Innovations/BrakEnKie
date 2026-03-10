@@ -3,14 +3,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
-// Required Supabase table: products
-// Columns: id (uuid), name (text), slug (text unique), description (text),
-//          price_display (text), category (text), is_active (bool default true),
-//          featured (bool default false), created_at (timestamptz default now())
-// Required table: product_images
-// Columns: id (uuid), product_id (uuid FK), image_url (text)
-// Required storage bucket: product-images
-
 type Product = {
   id: string;
   name: string;
@@ -40,37 +32,53 @@ export default function ShopPage() {
   }, []);
 
   return (
-    <main className="px-6 py-20 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-serif mb-4 text-center">Shop</h1>
-      <p className="text-center opacity-60 mb-12">BrakEnKie merchandise and accessories.</p>
+    <main className="px-6 py-24 max-w-6xl mx-auto">
+
+      {/* Header */}
+      <div className="text-center mb-20">
+        <p className="text-[11px] tracking-[0.55em] uppercase text-[var(--accent)] mb-5 font-sans opacity-70">
+          Merchandise
+        </p>
+        <h1 className="text-5xl md:text-6xl font-serif font-light mb-8">Shop</h1>
+        <div className="flex items-center justify-center gap-5 mb-8">
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+          <div className="w-1.5 h-1.5 bg-[var(--accent)]/40 rotate-45 flex-shrink-0" />
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+        </div>
+        <p className="opacity-45 text-base font-light">BrakEnKie merchandise and accessories.</p>
+      </div>
 
       {loading ? (
-        <div className="text-center opacity-40 py-20">Loading...</div>
+        <div className="text-center opacity-25 py-20 text-[11px] tracking-[0.35em] uppercase font-sans animate-pulse">
+          Loading&hellip;
+        </div>
       ) : products.length === 0 ? (
-        <div className="text-center opacity-40 py-20">No products available yet.</div>
+        <div className="text-center opacity-25 py-20 text-[11px] tracking-[0.35em] uppercase font-sans">
+          No products available yet.
+        </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-8">
           {products.map((product) => (
             <Link key={product.id} href={`/shop/${product.slug}`}>
-              <div className="bg-[var(--card)] rounded-2xl shadow overflow-hidden hover:scale-[1.02] transition cursor-pointer">
-                <div className="aspect-square overflow-hidden bg-stone-100 dark:bg-stone-800">
+              <div className="group bg-[var(--card)] border border-[var(--accent)]/10 overflow-hidden hover:border-[var(--accent)]/25 hover:-translate-y-1.5 hover:shadow-[0_20px_60px_rgba(184,147,90,0.1)] transition-all duration-500 cursor-pointer">
+                <div className="aspect-square overflow-hidden bg-stone-100 dark:bg-stone-900">
                   <img
                     src={
                       product.product_images?.[0]?.image_url ||
                       "https://placehold.co/600x600"
                     }
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>
-                <div className="p-5">
+                <div className="p-6 border-t border-[var(--accent)]/10">
                   {product.category && (
-                    <p className="text-xs uppercase tracking-widest opacity-40 mb-1">
+                    <p className="text-[10px] uppercase tracking-[0.25em] opacity-35 mb-2 font-sans">
                       {product.category}
                     </p>
                   )}
-                  <h3 className="font-serif text-xl mb-1">{product.name}</h3>
-                  <p className="font-medium text-[var(--accent)]">
+                  <h3 className="font-serif text-xl font-light mb-2">{product.name}</h3>
+                  <p className="text-sm font-sans text-[var(--accent)]">
                     {product.price_display}
                   </p>
                 </div>

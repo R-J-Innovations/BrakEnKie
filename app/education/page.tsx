@@ -33,17 +33,33 @@ const topics = [
 
 export default function Education() {
   return (
-    <main className="px-6 py-20 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-serif mb-4 text-center">French Bulldog Care Guide</h1>
-      <p className="text-center opacity-70 mb-12">
-        Everything you need to know about raising a happy, healthy Frenchie
-      </p>
+    <main className="px-6 py-24 max-w-4xl mx-auto">
 
-      <div className="grid md:grid-cols-2 gap-8">
+      {/* Header */}
+      <div className="text-center mb-20">
+        <p className="text-[11px] tracking-[0.55em] uppercase text-[var(--accent)] mb-5 font-sans opacity-70">
+          Knowledge
+        </p>
+        <h1 className="text-5xl md:text-6xl font-serif font-light mb-8">French Bulldog Care Guide</h1>
+        <div className="flex items-center justify-center gap-5 mb-8">
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+          <div className="w-1.5 h-1.5 bg-[var(--accent)]/40 rotate-45 flex-shrink-0" />
+          <div className="h-px w-16 bg-[var(--accent)]/35" />
+        </div>
+        <p className="opacity-45 text-base font-light max-w-sm mx-auto">
+          Everything you need to know about raising a happy, healthy Frenchie.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
         {topics.map((topic) => (
-          <div key={topic.title} className="bg-[var(--card)] rounded-2xl p-6 shadow">
-            <h2 className="text-xl font-serif mb-3">{topic.title}</h2>
-            <p className="opacity-80 leading-relaxed text-sm">{topic.content}</p>
+          <div
+            key={topic.title}
+            className="bg-[var(--card)] border border-[var(--accent)]/10 p-8 group hover:border-[var(--accent)]/25 transition-all duration-300"
+          >
+            <div className="h-px w-8 bg-[var(--accent)]/50 mb-6 group-hover:w-14 transition-all duration-500" />
+            <h2 className="text-xl font-serif font-light mb-4">{topic.title}</h2>
+            <p className="opacity-50 leading-relaxed text-sm font-sans">{topic.content}</p>
           </div>
         ))}
       </div>
