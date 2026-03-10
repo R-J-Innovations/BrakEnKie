@@ -47,6 +47,7 @@ export default function AvailablePage() {
       const { data } = await supabase
         .from("puppies")
         .select("*, puppy_images (image_url)")
+        .eq("status", "sold")
         .eq("featured", true)
         .order("created_at", { ascending: false });
       if (data) setPrevious(data);
