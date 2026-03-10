@@ -18,6 +18,15 @@ const puppyCards = [
   },
 ];
 
+const siteCards = [
+  {
+    href: "/admin/site",
+    icon: "🖼️",
+    title: "Site Settings",
+    sub: "Update hero image and site content",
+  },
+];
+
 const shopCards = [
   {
     href: "/admin/products/new",
@@ -74,7 +83,7 @@ export default function AdminDashboard() {
       </div>
 
       <h2 className="text-xs uppercase tracking-widest opacity-40 mb-4">Shop</h2>
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
         {shopCards.map((card) => (
           <a
             key={card.href}
@@ -87,6 +96,21 @@ export default function AdminDashboard() {
           </a>
         ))}
       </div>
+      <h2 className="text-xs uppercase tracking-widest opacity-40 mb-4">Site</h2>
+      <div className="grid md:grid-cols-3 gap-6">
+        {siteCards.map((card) => (
+          <a
+            key={card.href}
+            href={card.href}
+            className="p-6 bg-[var(--card)] rounded-2xl shadow hover:scale-[1.02] transition"
+          >
+            <div className="text-2xl mb-3">{card.icon}</div>
+            <div className="font-serif text-lg">{card.title}</div>
+            <div className="text-sm opacity-50 mt-1">{card.sub}</div>
+          </a>
+        ))}
+      </div>
+
     </div>
   );
 }

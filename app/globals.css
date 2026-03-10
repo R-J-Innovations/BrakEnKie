@@ -19,12 +19,14 @@
   --bg: var(--bg-light);
   --card: var(--card-light);
   --text: var(--text-light);
+  --nav: #EDE4D6;
 }
 
 .dark {
   --bg: var(--bg-dark);
   --card: var(--card-dark);
   --text: var(--text-dark);
+  --nav: #080604;
 }
 
 * {

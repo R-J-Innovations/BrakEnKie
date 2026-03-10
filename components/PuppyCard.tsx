@@ -68,7 +68,7 @@ export default function PuppyCard({ puppy }: { puppy: Puppy }) {
           rel="noopener noreferrer"
           className="block text-center px-6 py-3 bg-[var(--accent)] text-black text-[11px] tracking-[0.22em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
         >
-          Enquire for Price
+          Enquire
         </a>
       </div>
     </div>

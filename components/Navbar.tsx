@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
   { href: "/available",  label: "Available" },
-  { href: "/process",    label: "Reservations" },
+  { href: "/frenchies",  label: "Our Frenchies" },
   { href: "/about",      label: "Our Story" },
-  { href: "/shop",       label: "Shop" },
-  { href: "/education",  label: "Education" },
+  { href: "/shop",       label: "Frenchie Merch" },
   { href: "/contact",    label: "Contact" },
 ];
 
@@ -28,11 +28,18 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-[var(--accent)]/10 backdrop-blur-md bg-[var(--bg)]/80 transition-colors duration-300">
-        <div className="flex justify-between items-center px-6 md:px-8 py-4 max-w-7xl mx-auto">
+      <nav className="sticky top-0 z-50 border-b border-[var(--accent)]/10 backdrop-blur-md bg-[var(--nav)]/90 transition-colors duration-300">
+        <div className="flex justify-between items-center px-6 md:px-8 max-w-7xl mx-auto">
 
-          <Link href="/" className="text-2xl font-serif tracking-[0.12em] uppercase font-light">
-            BrakEnKie
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/Images/Logo.png"
+              alt="BrakEnKie"
+              width={120}
+              height={48}
+              className="object-contain h-16 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}

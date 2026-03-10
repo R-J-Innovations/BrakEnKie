@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   return (
-    <main className="px-6 py-16 max-w-5xl mx-auto">
+    <main className="px-6 lg:px-16 py-16 max-w-7xl mx-auto w-full">
 
       <Link
         href="/shop"

@@ -9,6 +9,7 @@ type Puppy = {
   gender: string;
   color: string;
   status: string;
+  featured: boolean;
   puppy_images: { image_url: string }[];
 };
 
@@ -40,6 +41,11 @@ export default function ManagePuppies() {
   async function updateStatus(id: string, status: string) {
     await supabase.from("puppies").update({ status }).eq("id", id);
     setPuppies((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)));
+  }
+
+  async function toggleFeatured(id: string, current: boolean) {
+    await supabase.from("puppies").update({ featured: !current }).eq("id", id);
+    setPuppies((prev) => prev.map((p) => (p.id === id ? { ...p, featured: !current } : p)));
   }
 
   async function deletePuppy(id: string, name: string) {
@@ -76,6 +82,17 @@ export default function ManagePuppies() {
                 {puppy.gender} • {puppy.color}
               </p>
             </div>
+            <button
+              onClick={() => toggleFeatured(puppy.id, puppy.featured)}
+              title="Toggle Previous Puppies"
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition flex-shrink-0 ${
+                puppy.featured
+                  ? "bg-[var(--accent)] text-black"
+                  : "bg-stone-200 dark:bg-stone-700 text-[var(--text)] opacity-50"
+              }`}
+            >
+              {puppy.featured ? "★ Featured" : "☆ Feature"}
+            </button>
             <select
               value={puppy.status}
               onChange={(e) => updateStatus(puppy.id, e.target.value)}

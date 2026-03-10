@@ -1,6 +1,11 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/") return null;
+
   const year = new Date().getFullYear();
 
   return (
@@ -18,10 +23,9 @@ export default function Footer() {
 
           <nav className="flex flex-wrap gap-x-10 gap-y-4 text-[11px] tracking-[0.25em] uppercase font-sans">
             <Link href="/available" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Available</Link>
-            <Link href="/process" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Reservations</Link>
+            <Link href="/frenchies" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Our Frenchies</Link>
             <Link href="/about" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Our Story</Link>
-            <Link href="/shop" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Shop</Link>
-            <Link href="/education" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Education</Link>
+            <Link href="/shop" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Frenchie merch</Link>
             <Link href="/contact" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300">Contact</Link>
           </nav>
         </div>

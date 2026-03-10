@@ -75,7 +75,7 @@ export default function PuppyDetailPage() {
     );
 
   return (
-    <main className="min-h-screen px-6 py-16 max-w-6xl mx-auto">
+    <main className="min-h-screen px-6 lg:px-16 py-16 max-w-7xl mx-auto w-full">
 
       <Link
         href="/available"

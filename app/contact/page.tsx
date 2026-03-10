@@ -15,7 +15,7 @@ const cards = [
 
 export default function Contact() {
   return (
-    <main className="px-6 py-24 max-w-3xl mx-auto">
+    <main className="px-6 lg:px-16 py-24 max-w-7xl mx-auto w-full">
 
       {/* Header */}
       <div className="text-center mb-20">

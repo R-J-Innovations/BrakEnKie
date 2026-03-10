@@ -23,7 +23,7 @@ const steps = [
 
 export default function ProcessPage() {
   return (
-    <main className="px-6 py-24 max-w-4xl mx-auto">
+    <main className="px-6 lg:px-16 py-24 max-w-7xl mx-auto w-full">
 
       {/* Header */}
       <div className="text-center mb-20">

@@ -1,17 +1,6 @@
-const packNames = [
-  "Ava Grey",
-  "Weasley",
-  "Chockie",
-  "LuLu",
-  "Laaitie",
-  "Jasmin",
-  "Mirabelle",
-  "Portia",
-];
-
 export default function About() {
   return (
-    <main className="px-6 py-24 max-w-4xl mx-auto">
+    <main className="px-6 lg:px-16 py-24 max-w-7xl mx-auto w-full">
 
       {/* Header */}
       <div className="text-center mb-20">
@@ -43,27 +32,6 @@ export default function About() {
             I wanted to type a long post to explain our daily lives and what makes us different,
             then deleted it and thought — these pictures speak so much for those willing to listen.
           </p>
-        </section>
-
-        <section>
-          <p className="text-[11px] tracking-[0.45em] uppercase text-[var(--accent)] mb-6 font-sans opacity-70">
-            Our Pack
-          </p>
-          <h2 className="text-3xl font-serif font-light mb-6">The Family</h2>
-          <p className="text-lg leading-relaxed opacity-55 font-light mb-8">
-            Ava Grey, Weasley, Chockie, LuLu, Laaitie, Jasmin, Mirabelle, Portia&hellip; yup,
-            that&apos;s them. They are my pack — my kids, my friends, my family, my Frenchies.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {packNames.map((name) => (
-              <span
-                key={name}
-                className="px-5 py-2 bg-[var(--card)] text-sm font-sans border border-[var(--accent)]/15 tracking-wide"
-              >
-                {name}
-              </span>
-            ))}
-          </div>
         </section>
 
         {/* Quote section */}
