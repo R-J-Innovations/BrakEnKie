@@ -6,6 +6,7 @@ import Image from "next/image";
 type PackMember = {
   id: string;
   name: string;
+  color: string | null;
   image_url: string | null;
 };
 
@@ -16,7 +17,7 @@ export default function FrenciesPage() {
     async function fetchPack() {
       const { data } = await supabase
         .from("pack")
-        .select("id, name, image_url")
+        .select("id, name, color, image_url")
         .order("sort_order", { ascending: true });
       if (data) setPack(data);
     }
@@ -34,8 +35,16 @@ export default function FrenciesPage() {
         <h1 className="text-5xl md:text-6xl font-serif font-light mb-8">Meet the Frenchies</h1>
         <div className="flex items-center justify-center gap-5 mb-8">
           <div className="h-px w-16 bg-[var(--accent)]/35" />
-          <div className="w-1.5 h-1.5 bg-[var(--accent)]/40 rotate-45 flex-shrink-0" />
+          <span className="text-xs opacity-40">🐾</span>
           <div className="h-px w-16 bg-[var(--accent)]/35" />
+        </div>
+        <div className="flex justify-center gap-5 mt-6 mb-6">
+          <a href="https://www.facebook.com/share/1FhgMQm5mx/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/brak_en_kie_frenchbulldogs?igsh=MTcyYThqanIwdm56ZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
         </div>
         <p className="opacity-45 text-base font-light max-w-md mx-auto leading-relaxed">
           They are my pack — my kids, my friends, my family, my Frenchies.
@@ -49,7 +58,7 @@ export default function FrenciesPage() {
         </p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {pack.map(({ id, name, image_url }) => (
+          {pack.map(({ id, name, color, image_url }) => (
             <div
               key={id}
               className="group bg-[var(--card)] border border-[var(--accent)]/10 overflow-hidden hover:border-[var(--accent)]/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(184,147,90,0.1)] transition-all duration-500"
@@ -78,6 +87,7 @@ export default function FrenciesPage() {
               <div className="px-6 py-5 border-t border-[var(--accent)]/10">
                 <div className="h-px w-6 bg-[var(--accent)]/40 mb-4 group-hover:w-10 transition-all duration-500" />
                 <h2 className="font-serif text-xl font-light">{name}</h2>
+                {color && <p className="text-[10px] tracking-[0.25em] uppercase opacity-40 font-sans mt-1">{color}</p>}
               </div>
             </div>
           ))}

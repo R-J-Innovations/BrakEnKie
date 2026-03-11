@@ -100,7 +100,7 @@ export default function PuppyDetailPage() {
         {/* Details */}
         <div className="flex flex-col justify-center">
           <p className="text-[11px] tracking-[0.5em] uppercase text-[var(--accent)] mb-4 font-sans opacity-75">
-            {puppy.gender} &bull; {puppy.color}
+            {puppy.gender} <span className="inline-block align-middle mx-1 opacity-40"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.5c-3.2 0-5.5-1.9-5.5-4.8 0-1.4.7-2.6 1.8-3.5C9.4 8.3 10.7 7.8 12 7.8s2.6.5 3.7 1.4c1.1.9 1.8 2.1 1.8 3.5 0 2.9-2.3 4.8-5.5 4.8z"/><circle cx="7" cy="8" r="1.5"/><circle cx="17" cy="8" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/><circle cx="19" cy="11.5" r="1.5"/></svg></span> {puppy.color}
           </p>
 
           <h1 className="text-5xl md:text-6xl font-serif font-light mb-4">{puppy.name}</h1>

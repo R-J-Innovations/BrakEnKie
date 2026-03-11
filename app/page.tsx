@@ -77,12 +77,12 @@ export default function Home() {
           </div>
 
           <p className="text-[11px] tracking-[0.55em] uppercase text-white mb-8 font-sans drop-shadow-md">
-            Cradle of Humankind &middot; South Africa
+            Cradle of Humankind <span className="inline-block align-middle mx-1 opacity-40"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.5c-3.2 0-5.5-1.9-5.5-4.8 0-1.4.7-2.6 1.8-3.5C9.4 8.3 10.7 7.8 12 7.8s2.6.5 3.7 1.4c1.1.9 1.8 2.1 1.8 3.5 0 2.9-2.3 4.8-5.5 4.8z"/><circle cx="7" cy="8" r="1.5"/><circle cx="17" cy="8" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/><circle cx="19" cy="11.5" r="1.5"/></svg></span> South Africa
           </p>
 
           <div className="flex items-center justify-center gap-5 mb-10">
             <div className="h-px w-20 bg-[var(--accent)]/50" />
-            <div className="w-1.5 h-1.5 bg-[var(--accent)]/60 rotate-45 flex-shrink-0" />
+            <span className="text-xs opacity-60">🐾</span>
             <div className="h-px w-20 bg-[var(--accent)]/50" />
           </div>
 
@@ -113,7 +113,7 @@ export default function Home() {
 
           <div className="flex items-center gap-6">
             <a
-              href="https://www.facebook.com"
+              href="https://www.facebook.com/share/1FhgMQm5mx/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener noreferrer"
               className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300"
@@ -124,7 +124,7 @@ export default function Home() {
               </svg>
             </a>
             <a
-              href="https://www.instagram.com"
+              href="https://www.instagram.com/brak_en_kie_frenchbulldogs?igsh=MTcyYThqanIwdm56ZQ%3D%3D&utm_source=qr"
               target="_blank"
               rel="noopener noreferrer"
               className="opacity-40 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300"

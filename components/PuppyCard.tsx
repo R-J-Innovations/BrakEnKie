@@ -56,8 +56,8 @@ export default function PuppyCard({ puppy }: { puppy: Puppy }) {
         </div>
 
         <p className="text-[11px] tracking-[0.22em] uppercase opacity-40 mb-4 font-sans">
-          {puppy.gender} &bull; {puppy.color}
-          {puppy.dob && ` \u2022 ${formatAge(puppy.dob)}`}
+          {puppy.gender} <span className="inline-block align-middle mx-1 opacity-40"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.5c-3.2 0-5.5-1.9-5.5-4.8 0-1.4.7-2.6 1.8-3.5C9.4 8.3 10.7 7.8 12 7.8s2.6.5 3.7 1.4c1.1.9 1.8 2.1 1.8 3.5 0 2.9-2.3 4.8-5.5 4.8z"/><circle cx="7" cy="8" r="1.5"/><circle cx="17" cy="8" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/><circle cx="19" cy="11.5" r="1.5"/></svg></span> {puppy.color}
+          {puppy.dob && <> <span className="inline-block align-middle mx-1 opacity-40"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.5c-3.2 0-5.5-1.9-5.5-4.8 0-1.4.7-2.6 1.8-3.5C9.4 8.3 10.7 7.8 12 7.8s2.6.5 3.7 1.4c1.1.9 1.8 2.1 1.8 3.5 0 2.9-2.3 4.8-5.5 4.8z"/><circle cx="7" cy="8" r="1.5"/><circle cx="17" cy="8" r="1.5"/><circle cx="5" cy="11.5" r="1.5"/><circle cx="19" cy="11.5" r="1.5"/></svg></span> {formatAge(puppy.dob)}</>}
         </p>
 
         <p className="text-sm opacity-55 mb-6 leading-relaxed">{puppy.description}</p>
