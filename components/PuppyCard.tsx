@@ -1,3 +1,5 @@
+import WatermarkedImage from "@/components/WatermarkedImage";
+
 export type Puppy = {
   id: string;
   name: string;
@@ -29,10 +31,10 @@ export default function PuppyCard({ puppy }: { puppy: Puppy }) {
 
       <a href={`/available/${puppy.id}`} className="block relative overflow-hidden">
         <div className="aspect-square overflow-hidden">
-          <img
-            src={imageUrl}
+          <WatermarkedImage
+            externalUrl={imageUrl}
             alt={puppy.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="transition-transform duration-700 group-hover:scale-110"
           />
         </div>
         {/* Gold overlay on hover */}

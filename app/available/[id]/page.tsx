@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import PuppyGallery from "@/components/PuppyGallery";
+import WatermarkedImage from "@/components/WatermarkedImage";
 import Link from "next/link";
 
 interface PuppyImage {
@@ -86,12 +86,15 @@ export default function PuppyDetailPage() {
 
       <div className="grid md:grid-cols-2 gap-16 mt-4">
 
-        {/* Gallery */}
-        <div>
-          {puppy.puppy_images?.length ? (
-            <PuppyGallery images={puppy.puppy_images} />
+        {/* Image */}
+        <div className="aspect-square overflow-hidden bg-[var(--card)] border border-[var(--accent)]/10">
+          {puppy.puppy_images?.[0]?.image_url ? (
+            <WatermarkedImage
+              externalUrl={puppy.puppy_images[0].image_url}
+              alt={puppy.name}
+            />
           ) : (
-            <div className="aspect-square bg-[var(--card)] border border-[var(--accent)]/10 flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center">
               <span className="text-[11px] tracking-[0.3em] uppercase opacity-20 font-sans">No Images</span>
             </div>
           )}

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import Image from "next/image";
+import WatermarkedImage from "@/components/WatermarkedImage";
 
 type PackMember = {
   id: string;
@@ -56,11 +56,10 @@ export default function FrenciesPage() {
             >
               <div className="relative aspect-square overflow-hidden">
                 {image_url ? (
-                  <Image
-                    src={image_url}
+                  <WatermarkedImage
+                    externalUrl={image_url}
                     alt={name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-[var(--card)] gap-3">
