@@ -40,12 +40,12 @@ export default function Home() {
   return (
     <main className="relative h-[calc(100svh-57px)] overflow-hidden">
 
-      {/* Full-bleed hero image */}
+      {/* Full-bleed hero image — hidden on mobile */}
       <Image
         src={heroUrl}
         alt="BrakEnKie French Bulldogs"
         fill
-        className="object-cover object-center"
+        className="object-cover object-center hidden sm:block"
         priority
       />
 
@@ -63,6 +63,18 @@ export default function Home() {
       {/* Centre content */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <div className="text-center px-6 w-full max-w-4xl mx-auto">
+
+          {/* Logo — shown on mobile only, above location text */}
+          <div className="flex justify-center mb-8 sm:hidden">
+            <Image
+              src="/Images/Logo.png"
+              alt="BrakEnKie Logo"
+              width={220}
+              height={220}
+              className="object-contain"
+              priority
+            />
+          </div>
 
           <p className="text-[11px] tracking-[0.55em] uppercase text-white mb-8 font-sans drop-shadow-md">
             Cradle of Humankind &middot; South Africa

@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import PuppyCard from "@/components/PuppyCard";
-import WatermarkedImage from "@/components/WatermarkedImage";
 
 export default function AvailablePage() {
   const [puppies, setPuppies] = useState<any[]>([]);
@@ -120,10 +119,10 @@ export default function AvailablePage() {
                 >
                   <div className="aspect-square overflow-hidden bg-[var(--card)]">
                     {img ? (
-                      <WatermarkedImage
-                        externalUrl={img}
+                      <img
+                        src={img}
                         alt={puppy.name}
-                        className="transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center opacity-15">
@@ -172,11 +171,10 @@ export default function AvailablePage() {
               className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]"
               style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}
             >
-              <WatermarkedImage
-                localPath="attestation/Elton John.jpeg"
+              <img
+                src="/api/image?path=attestation%2FElton%20John.jpeg"
                 alt="Happy client"
-                
-                
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -224,9 +222,10 @@ export default function AvailablePage() {
               className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]"
               style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}
             >
-              <WatermarkedImage
-                localPath="attestation/Lanny.jpeg"
+              <img
+                src="/api/image?path=attestation%2FLanny.jpeg"
                 alt="Lanny in Dubai"
+                className="w-full h-full object-cover"
                 
               />
             </div>
@@ -274,10 +273,10 @@ export default function AvailablePage() {
               className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]"
               style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}
             >
-              <WatermarkedImage
-                localPath="attestation/Ghana.jpeg"
+              <img
+                src="/api/image?path=attestation%2FGhana.jpeg"
                 alt="Ghana living his best life"
-                
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -336,10 +335,10 @@ export default function AvailablePage() {
               className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]"
               style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}
             >
-              <WatermarkedImage
-                localPath="attestation/Loodle.jpeg"
+              <img
+                src="/api/image?path=attestation%2FLoodle.jpeg"
                 alt="Loodle"
-                
+                className="w-full h-full object-cover"
               />
             </div>
           </div>

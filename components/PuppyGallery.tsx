@@ -2,8 +2,6 @@
 
 import "./PuppyGallery.css";
 import { useEffect, useMemo, useState } from "react";
-import WatermarkedImage from "@/components/WatermarkedImage";
-
 export type PuppyGalleryImage = {
   image_url: string;
 };
@@ -32,6 +30,9 @@ export default function PuppyGallery({ images }: Props) {
         <div
           key={img.image_url + i}
           className={`option ${activeIndex === i ? "active" : ""}`}
+          style={
+            { "--optionBackground": `url(${img.image_url})` } as React.CSSProperties
+          }
           onClick={() => setActiveIndex(i)}
           role="button"
           tabIndex={0}
@@ -40,20 +41,8 @@ export default function PuppyGallery({ images }: Props) {
           }}
           aria-label={`View image ${i + 1}`}
         >
-          {/* Canvas-rendered watermarked image fills the option div */}
-          <WatermarkedImage
-            externalUrl={img.image_url}
-            alt={`Photo ${i + 1}`}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
-            }}
-          />
-          <div className="shadow" style={{ position: "relative", zIndex: 1 }} />
-          <div className="label" style={{ zIndex: 2 }}>
+          <div className="shadow"></div>
+          <div className="label">
             <div className="icon">
               <span aria-hidden="true">🐾</span>
             </div>
