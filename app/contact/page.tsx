@@ -37,7 +37,7 @@ export default function Contact() {
         </a>
 
         <a
-          href="tel:+27000000000"
+          href="tel:+27718981890"
           className="flex-1 max-w-xs mx-auto sm:mx-0 bg-[var(--card)] border border-[var(--accent)]/10 hover:border-[var(--accent)]/30 transition-all duration-300 p-10 text-center group"
         >
           <div className="w-6 h-px bg-[var(--accent)]/40 mx-auto mb-6 group-hover:w-10 transition-all duration-500" />
@@ -58,7 +58,7 @@ export default function Contact() {
           <p className="font-serif text-lg font-light mb-6">Join Our Group</p>
           <div className="flex justify-center">
             <Image
-              src="/Images/QR.jpeg"
+              src="/Images/QR.png"
               alt="WhatsApp Community QR Code"
               width={140}
               height={140}

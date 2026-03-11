@@ -98,7 +98,7 @@ export default function ProductDetailPage() {
           <p className="opacity-55 leading-relaxed mb-10 font-light">{product.description}</p>
 
           <a
-            href={`https://wa.me/27XXXXXXXXX?text=Hi%2C%20I%20am%20interested%20in%20${encodeURIComponent(product.name)}`}
+            href={`https://wa.me/27718981890?text=Hi%2C%20I%20am%20interested%20in%20${encodeURIComponent(product.name)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="block text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"

@@ -63,7 +63,7 @@ export default function PuppyCard({ puppy }: { puppy: Puppy }) {
         <p className="text-sm opacity-55 mb-6 leading-relaxed">{puppy.description}</p>
 
         <a
-          href={`https://wa.me/27XXXXXXXXX?text=Hi%20I%20am%20interested%20in%20${puppy.name}`}
+          href={`https://wa.me/27718981890?text=Hi%20I%20am%20interested%20in%20${puppy.name}`}
           target="_blank"
           rel="noopener noreferrer"
           className="block text-center px-6 py-3 bg-[var(--accent)] text-black text-[11px] tracking-[0.22em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
