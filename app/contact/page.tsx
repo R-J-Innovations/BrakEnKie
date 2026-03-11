@@ -42,7 +42,7 @@ export default function Contact() {
         >
           <div className="w-6 h-px bg-[var(--accent)]/40 mx-auto mb-6 group-hover:w-10 transition-all duration-500" />
           <p className="text-[10px] tracking-[0.4em] uppercase opacity-35 font-sans mb-3">WhatsApp / Phone</p>
-          <p className="font-serif text-lg font-light">+27 00 000 0000</p>
+          <p className="font-serif text-lg font-light">+27 71 898 1890</p>
         </a>
       </div>
 
