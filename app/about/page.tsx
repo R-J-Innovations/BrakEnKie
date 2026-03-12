@@ -42,6 +42,92 @@ export default function About() {
           </p>
         </section>
 
+        {/* Photo story — OwnerWalkingWithThePack */}
+        <div className="relative flex flex-col md:flex-row items-start gap-0">
+          <div className="relative z-10 flex-shrink-0 w-56 md:w-64 md:mr-[-3rem] mx-auto md:mx-0">
+            <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
+            <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
+            <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
+              <img src="/images/walkabout/OwnerWalkingWithThePack.jpeg" alt="Walking with the pack on the farm" className="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pl-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
+            <div className="h-px w-8 bg-[var(--accent)]/40 mb-6" />
+            <p className="font-serif text-xl md:text-2xl font-light leading-relaxed opacity-80 mb-8">
+              This is what mornings look like. Five hectares, open sky, and a pack that has no agenda
+              other than to be exactly where they are. They don&apos;t rush. They don&apos;t perform.
+              They just walk — and somewhere along the way, so do I.
+            </p>
+            <p className="text-[11px] tracking-[0.35em] uppercase font-sans text-[var(--accent)] opacity-80">The Daily Walk</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase font-sans opacity-30 mt-1">Cradle of Humankind &nbsp;·&nbsp; Every morning</p>
+          </div>
+        </div>
+
+        {/* Photo story — OwnerStandingWithThePack (reversed) */}
+        <div className="relative flex flex-col md:flex-row-reverse items-start gap-0">
+          <div className="relative z-10 flex-shrink-0 w-56 md:w-64 md:ml-[-3rem] mx-auto md:mx-0">
+            <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
+            <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
+            <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
+              <img src="/images/walkabout/OwnerStandingWithThePack.jpeg" alt="Standing with the whole pack" className="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pr-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
+            <div className="h-px w-8 bg-[var(--accent)]/40 mb-6" />
+            <p className="font-serif text-xl md:text-2xl font-light leading-relaxed opacity-80 mb-8">
+              We breed small. We raise intentional. Every dog in this pack knows where they stand —
+              not because we trained hierarchy into them, but because they&apos;ve always been
+              part of something. A family, not a kennel.
+            </p>
+            <p className="text-[11px] tracking-[0.35em] uppercase font-sans text-[var(--accent)] opacity-80">The Pack</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase font-sans opacity-30 mt-1">BrakEnKie &nbsp;·&nbsp; Est. 2022</p>
+          </div>
+        </div>
+
+        {/* Photo story — OwnerPlayingWithWeasley */}
+        <div className="relative flex flex-col md:flex-row items-start gap-0">
+          <div className="relative z-10 flex-shrink-0 w-56 md:w-64 md:mr-[-3rem] mx-auto md:mx-0">
+            <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
+            <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
+            <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
+              <img src="/images/walkabout/OwnerPlayingWithWeasley.jpeg" alt="Playing with Weasley" className="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pl-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
+            <div className="h-px w-8 bg-[var(--accent)]/40 mb-6" />
+            <p className="font-serif text-xl md:text-2xl font-light leading-relaxed opacity-80 mb-8">
+              Weasley doesn&apos;t care about bloodlines or show titles. He cares about this —
+              right now, full presence, all in. That energy is what we try to pass on.
+              Every puppy that leaves here has been loved like this first.
+            </p>
+            <p className="text-[11px] tracking-[0.35em] uppercase font-sans text-[var(--accent)] opacity-80">Playing With Weasley</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase font-sans opacity-30 mt-1">Full presence &nbsp;·&nbsp; Every single time</p>
+          </div>
+        </div>
+
+        {/* Photo story — OwnerSittingWithWeasley (reversed) */}
+        <div className="relative flex flex-col md:flex-row-reverse items-start gap-0">
+          <div className="relative z-10 flex-shrink-0 w-56 md:w-64 md:ml-[-3rem] mx-auto md:mx-0">
+            <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
+            <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
+            <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
+              <img src="/images/walkabout/OwnerSittingWithWeasley.jpeg" alt="Sitting with Weasley" className="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pr-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
+            <div className="h-px w-8 bg-[var(--accent)]/40 mb-6" />
+            <p className="font-serif text-xl md:text-2xl font-light leading-relaxed opacity-80 mb-8">
+              The quiet moments are the ones that matter most. Sitting still together —
+              no agenda, no destination. This is the relationship we build before a puppy
+              ever meets their new family. It starts here, on the grass, in the sun.
+            </p>
+            <p className="text-[11px] tracking-[0.35em] uppercase font-sans text-[var(--accent)] opacity-80">Still Together</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase font-sans opacity-30 mt-1">BrakEnKie Farm &nbsp;·&nbsp; Where it begins</p>
+          </div>
+        </div>
+
+        <div className="h-px bg-[var(--accent)]/10" />
+
         {/* Quote section */}
         <section className="bg-[var(--card)] border border-[var(--accent)]/12 p-12 md:p-16 text-center">
           <p className="text-[11px] tracking-[0.45em] uppercase text-[var(--accent)] mb-8 font-sans opacity-70">
