@@ -31,6 +31,30 @@ const topics = [
   },
 ];
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "French Bulldog Care Guide",
+  description:
+    "Everything you need to know about raising a happy, healthy French Bulldog — diet, exercise, breathing, grooming, health care, and training from a trusted South African breeder.",
+  keywords: [
+    "French Bulldog care guide",
+    "how to care for a French Bulldog",
+    "French Bulldog diet",
+    "French Bulldog health",
+    "French Bulldog exercise",
+    "Frenchie grooming",
+    "brachycephalic dog care",
+    "French Bulldog South Africa",
+  ],
+  openGraph: {
+    title: "French Bulldog Care Guide | BrakEnKie",
+    description:
+      "Expert care advice on diet, exercise, breathing, grooming, and training for French Bulldogs — from a trusted breeder in South Africa.",
+  },
+  alternates: { canonical: "/education" },
+};
+
 export default function Education() {
   return (
     <main className="px-6 lg:px-16 py-24 max-w-7xl mx-auto w-full">

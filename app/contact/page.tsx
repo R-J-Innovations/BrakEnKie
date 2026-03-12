@@ -1,4 +1,24 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact & Testimonials",
+  description:
+    "Get in touch with BrakEnKie French Bulldogs. Reach us on WhatsApp or Instagram to enquire about available Frenchie puppies in South Africa.",
+  keywords: [
+    "contact French Bulldog breeder South Africa",
+    "BrakEnKie contact",
+    "buy French Bulldog WhatsApp",
+    "French Bulldog puppy enquiry South Africa",
+    "Frenchie breeder contact Gauteng",
+  ],
+  openGraph: {
+    title: "Contact | BrakEnKie French Bulldogs",
+    description:
+      "Reach out to BrakEnKie on WhatsApp or Instagram to enquire about French Bulldog puppies in South Africa.",
+  },
+  alternates: { canonical: "/contact" },
+};
 
 export default function Contact() {
   return (

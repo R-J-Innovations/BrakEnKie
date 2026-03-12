@@ -1,4 +1,24 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How to Reserve a Puppy",
+  description:
+    "Learn how to reserve a French Bulldog puppy from BrakEnKie. A personal, intentional process — every puppy goes to a home we trust.",
+  keywords: [
+    "how to buy a French Bulldog South Africa",
+    "reserve French Bulldog puppy",
+    "French Bulldog puppy reservation South Africa",
+    "buy Frenchie puppy Gauteng",
+    "French Bulldog adoption process",
+  ],
+  openGraph: {
+    title: "How to Reserve a Puppy | BrakEnKie French Bulldogs",
+    description:
+      "A personal, intentional process for reserving a French Bulldog puppy from BrakEnKie in South Africa.",
+  },
+  alternates: { canonical: "/process" },
+};
 
 const steps = [
   {

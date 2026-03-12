@@ -1,3 +1,25 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Our Story",
+  description:
+    "Meet the family behind BrakEnKie — a small, passionate French Bulldog breeder raising Frenchies on a 5-hectare farm in the Cradle of Humankind, South Africa.",
+  keywords: [
+    "BrakEnKie story",
+    "French Bulldog breeder story South Africa",
+    "family French Bulldog breeder",
+    "Frenchie farm South Africa",
+    "Cradle of Humankind dog breeder",
+  ],
+  openGraph: {
+    title: "Our Story | BrakEnKie French Bulldogs",
+    description:
+      "A small, passionate family raising French Bulldogs on a 5-hectare farm in the Cradle of Humankind, South Africa.",
+    images: [{ url: "/images/walkabout/OwnerWalkingWithThePack.jpeg", alt: "Walking with the pack at BrakEnKie" }],
+  },
+  alternates: { canonical: "/about" },
+};
+
 export default function About() {
   return (
     <main className="px-6 lg:px-16 py-24 max-w-7xl mx-auto w-full">

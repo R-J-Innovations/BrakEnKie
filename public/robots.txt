@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block admin routes
+Disallow: /admin
+
+Sitemap: https://www.brakenkie.co.za/sitemap.xml
