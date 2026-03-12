@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: "Our Story | BrakEnKie French Bulldogs",
     description:
       "A small, passionate family raising French Bulldogs on a 5-hectare farm in the Cradle of Humankind, South Africa.",
-    images: [{ url: "/images/walkabout/OwnerWalkingWithThePack.jpeg", alt: "Walking with the pack at BrakEnKie" }],
+    images: [{ url: "/Images/walkabout/OwnerWalkingWithThePack.jpeg", alt: "Walking with the pack at BrakEnKie" }],
   },
   alternates: { canonical: "/about" },
 };
@@ -70,7 +70,7 @@ export default function About() {
             <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
             <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
             <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
-              <img src="/images/walkabout/OwnerWalkingWithThePack.jpeg" alt="Walking with the pack on the farm" className="w-full h-full object-cover" />
+              <img src="/Images/walkabout/OwnerWalkingWithThePack.jpeg" alt="Walking with the pack on the farm" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pl-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
@@ -91,7 +91,7 @@ export default function About() {
             <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
             <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
             <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
-              <img src="/images/walkabout/OwnerStandingWithThePack.jpeg" alt="Standing with the whole pack" className="w-full h-full object-cover" />
+              <img src="/Images/walkabout/OwnerStandingWithThePack.jpeg" alt="Standing with the whole pack" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pr-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
@@ -112,7 +112,7 @@ export default function About() {
             <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
             <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
             <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
-              <img src="/images/walkabout/OwnerPlayingWithWeasley.jpeg" alt="Playing with Weasley" className="w-full h-full object-cover" />
+              <img src="/Images/walkabout/OwnerPlayingWithWeasley.jpeg" alt="Playing with Weasley" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pl-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
@@ -133,7 +133,7 @@ export default function About() {
             <div className="absolute inset-0 rounded-[50%_50%_50%_50%_/_60%_60%_40%_40%] bg-[var(--accent)]/20 blur-2xl scale-110 pointer-events-none" />
             <div className="absolute inset-[-5px] border border-[var(--accent)]/25 pointer-events-none" style={{ borderRadius: "50% 50% 50% 50% / 60% 60% 40% 40%" }} />
             <div className="relative overflow-hidden aspect-[3/4] shadow-[0_30px_70px_rgba(0,0,0,0.35),0_0_40px_rgba(184,147,90,0.12)]" style={{ borderRadius: "50% 50% 12px 12px / 40% 40% 12px 12px" }}>
-              <img src="/images/walkabout/OwnerSittingWithWeasley.jpeg" alt="Sitting with Weasley" className="w-full h-full object-cover" />
+              <img src="/Images/walkabout/OwnerSittingWithWeasley.jpeg" alt="Sitting with Weasley" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="relative flex-1 bg-[var(--card)] border border-[var(--accent)]/15 px-10 md:pr-16 pt-10 pb-10 md:pt-12 mt-0 md:mt-8">
