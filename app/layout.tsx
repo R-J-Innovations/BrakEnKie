@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PageTransition from "../components/PageTransition";
+import { Analytics } from "@vercel/analytics/next";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
@@ -135,6 +136,7 @@ export default function RootLayout({
         <Navbar />
         <PageTransition>{children}</PageTransition>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
