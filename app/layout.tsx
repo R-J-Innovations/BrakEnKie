@@ -87,6 +87,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let apiKey = "";
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -133,6 +134,15 @@ export default function RootLayout({
         />
       </head>
       <body className={`${cormorant.variable} ${inter.variable} antialiased`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.AIChatbotConfig = { apiKey: "ak_32d86f2aa769488aa41ef0c7f0b55a9a" };`,
+          }}
+        />
+        <script
+          async
+          src="https://ai-chatbot-backend-production-d810.up.railway.app/chatbot.js"
+        ></script>
         <Navbar />
         <PageTransition>{children}</PageTransition>
         <Footer />
