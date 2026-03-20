@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link";
 
 type Product = {
   id: string;
   name: string;
+  slug: string;
   category: string;
   price_display: string;
   description: string;
@@ -62,9 +64,10 @@ export default function ShopPage() {
           {products.map((product) => {
             const img = product.product_images?.[0]?.image_url;
             return (
-              <div
+              <Link
                 key={product.id}
-                className="group bg-[var(--card)] border border-[var(--accent)]/10 overflow-hidden hover:border-[var(--accent)]/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(184,147,90,0.1)] transition-all duration-500"
+                href={`/shop/${product.slug}`}
+                className="group bg-[var(--card)] border border-[var(--accent)]/10 overflow-hidden hover:border-[var(--accent)]/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(184,147,90,0.1)] transition-all duration-500 block"
               >
                 <div className="relative aspect-square overflow-hidden bg-[var(--card)]">
                   {img ? (
@@ -92,7 +95,7 @@ export default function ShopPage() {
                     <p className="text-[var(--accent)] font-sans text-sm tracking-wide">{product.price_display}</p>
                   )}
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
