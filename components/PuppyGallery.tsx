@@ -42,17 +42,6 @@ export default function PuppyGallery({ images }: Props) {
           aria-label={`View image ${i + 1}`}
         >
           <div className="shadow"></div>
-          <div className="label">
-            <div className="icon">
-              <span aria-hidden="true">🐾</span>
-            </div>
-            <div className="info">
-              <div className="main">Photo {i + 1}</div>
-              <div className="sub">
-                {activeIndex === i ? "Click other images to view" : ""}
-              </div>
-            </div>
-          </div>
         </div>
       ))}
     </div>
