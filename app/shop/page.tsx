@@ -63,10 +63,11 @@ export default function ShopPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => {
             const img = product.product_images?.[0]?.image_url;
+            const href = `/shop/${product.slug || product.id}`;
             return (
               <Link
                 key={product.id}
-                href={`/shop/${product.slug}`}
+                href={href}
                 className="group bg-[var(--card)] border border-[var(--accent)]/10 overflow-hidden hover:border-[var(--accent)]/30 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(184,147,90,0.1)] transition-all duration-500 block"
               >
                 <div className="relative aspect-square overflow-hidden bg-[var(--card)]">

@@ -46,6 +46,12 @@ const shopCards = [
     title: "Manage Products",
     sub: "Edit status or remove products",
   },
+  {
+    href: "/admin/orders",
+    icon: "📦",
+    title: "Orders",
+    sub: "View PayFast orders and revenue",
+  },
 ];
 
 export default function AdminDashboard() {

@@ -1,7 +1,7 @@
 "use client";
 
-import "./PuppyGallery.css";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
 export type PuppyGalleryImage = {
   image_url: string;
 };
@@ -18,32 +18,41 @@ export default function PuppyGallery({ images }: Props) {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [safeImages.length]);
-
   if (safeImages.length === 0) return null;
 
   return (
-    <div className="options">
-      {safeImages.map((img, i) => (
-        <div
-          key={img.image_url + i}
-          className={`option ${activeIndex === i ? "active" : ""}`}
-          style={
-            { "--optionBackground": `url(${img.image_url})` } as React.CSSProperties
-          }
-          onClick={() => setActiveIndex(i)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") setActiveIndex(i);
-          }}
-          aria-label={`View image ${i + 1}`}
-        >
-          <div className="shadow"></div>
+    <div className="flex flex-col gap-3">
+      {/* Main image */}
+      <div className="aspect-square overflow-hidden bg-[var(--card)]">
+        <img
+          src={safeImages[activeIndex].image_url}
+          alt={`Image ${activeIndex + 1}`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Thumbnails */}
+      {safeImages.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto">
+          {safeImages.map((img, i) => (
+            <button
+              key={img.image_url + i}
+              onClick={() => setActiveIndex(i)}
+              className={`flex-shrink-0 w-16 h-16 overflow-hidden border-2 transition-all duration-200 ${
+                activeIndex === i
+                  ? "border-[var(--accent)]"
+                  : "border-transparent opacity-50 hover:opacity-100"
+              }`}
+            >
+              <img
+                src={img.image_url}
+                alt={`Thumbnail ${i + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </button>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

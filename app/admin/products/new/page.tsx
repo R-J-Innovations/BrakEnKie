@@ -16,7 +16,7 @@ export default function AddProduct() {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [priceDisplay, setPriceDisplay] = useState("");
+  const [price, setPrice] = useState("");
   const [featured, setFeatured] = useState(false);
   const [images, setImages] = useState<FileList | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,8 @@ export default function AddProduct() {
           slug,
           category,
           description,
-          price_display: priceDisplay,
+          price_display: price ? `R ${parseFloat(price).toFixed(2).replace(/\.00$/, "")}` : "",
+          price: price ? parseFloat(price) : null,
           featured,
           is_active: true,
         },
@@ -94,9 +95,12 @@ export default function AddProduct() {
           onChange={(e) => setCategory(e.target.value)}
         />
         <input
-          placeholder="Price display (e.g. R 350)"
+          type="number"
+          placeholder="Price in Rands (e.g. 350)"
+          step="0.01"
+          min="0"
           className="w-full p-3 rounded-lg border bg-[var(--bg)] text-[var(--text)] border-black/20 dark:border-white/20"
-          onChange={(e) => setPriceDisplay(e.target.value)}
+          onChange={(e) => setPrice(e.target.value)}
         />
         <textarea
           placeholder="Description"
