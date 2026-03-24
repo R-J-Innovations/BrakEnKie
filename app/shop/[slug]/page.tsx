@@ -44,12 +44,15 @@ export default function ProductDetailPage() {
     let cancelled = false;
 
     async function fetchProduct() {
-      // Try slug first, then fall back to ID (for products without a slug)
-      const { data, error } = await supabase
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+      const query = supabase
         .from("products")
-        .select("*, product_images (image_url)")
-        .or(`slug.eq.${slug},id.eq.${slug}`)
-        .single();
+        .select("*, product_images (image_url)");
+
+      const { data, error } = await (isUuid
+        ? query.or(`slug.eq.${slug},id.eq.${slug}`)
+        : query.eq("slug", slug)
+      ).single();
 
       if (cancelled) return;
 
