@@ -208,7 +208,7 @@ export default function ProductDetailPage() {
                 Order &amp; Pay Online
               </button>
               <p className="text-[10px] opacity-40 font-sans mt-3 text-center leading-relaxed">
-                Made to order &mdash; allow 5&ndash;10 working days for delivery
+                Made to order &mdash; allow 7&ndash;14 working days for delivery
               </p>
             </>
           )}
