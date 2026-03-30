@@ -135,24 +135,25 @@ export default function Home() {
         </div>
 
         {/* Carousel */}
-        <div className="relative overflow-hidden aspect-[4/3] md:aspect-[16/7] max-w-4xl mx-auto mb-10">
+        <div className="relative max-w-4xl mx-auto mb-10">
           {COLLECTION_IMAGES.map((src, i) => (
             <div
               key={src}
-              className="absolute inset-0 transition-opacity duration-1000"
-              style={{ opacity: i === activeSlide ? 1 : 0 }}
+              className="transition-opacity duration-1000"
+              style={{ opacity: i === activeSlide ? 1 : 0, position: i === activeSlide ? "relative" : "absolute", inset: 0 }}
             >
               <Image
                 src={src}
                 alt={`BrakEnKie collection ${i + 1}`}
-                fill
-                className="object-cover"
+                width={896}
+                height={896}
+                className="w-full h-auto object-contain"
                 sizes="(max-width: 768px) 100vw, 896px"
               />
             </div>
           ))}
           {/* Dot indicators */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+          <div className="flex justify-center gap-2 mt-4">
             {COLLECTION_IMAGES.map((_, i) => (
               <button
                 key={i}
