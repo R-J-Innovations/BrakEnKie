@@ -10,6 +10,7 @@ export interface InvoiceData {
   buyerEmail?: string;
   buyerPhone?: string;
   paymentId?: string;
+  size?: string;
 }
 
 export function generateInvoiceHtml(data: InvoiceData): string {
@@ -124,6 +125,7 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                 <tr>
                   <td style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:'Georgia',serif;border-bottom:1px solid #f0ebe3;">
                     ${data.productName}
+                    ${data.size ? `<span style="display:block;color:#888;font-size:11px;font-family:Arial,sans-serif;margin-top:3px;">Size: ${data.size}</span>` : ""}
                   </td>
                   <td align="center" style="padding:16px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
                     ${data.quantity}
@@ -176,6 +178,17 @@ export function generateInvoiceHtml(data: InvoiceData): string {
               <span style="display:inline-block;background:#d4edda;color:#155724;font-size:11px;font-family:Arial,sans-serif;letter-spacing:0.2em;text-transform:uppercase;padding:6px 14px;border-radius:4px;">
                 Payment Confirmed
               </span>
+            </td>
+          </tr>
+
+          <!-- Delivery Note -->
+          <tr>
+            <td style="padding:0 48px 24px;">
+              <div style="background:#f8f5f0;border-left:3px solid #c9a96e;padding:14px 16px;">
+                <p style="margin:0;color:#555;font-size:12px;font-family:Arial,sans-serif;line-height:1.6;">
+                  <strong style="color:#1a1a1a;">Delivery:</strong> 5–10 working days. All orders are made to order — please allow time for production before dispatch.
+                </p>
+              </div>
             </td>
           </tr>
 

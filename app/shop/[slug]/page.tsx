@@ -34,6 +34,7 @@ export default function ProductDetailPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState("");
   const [formError, setFormError] = useState("");
 
   // Hidden PayFast form ref — we populate + submit it programmatically
@@ -91,6 +92,11 @@ export default function ProductDetailPage() {
       return;
     }
 
+    if (!size) {
+      setFormError("Please select a size.");
+      return;
+    }
+
     setCheckoutState("processing");
 
     try {
@@ -104,6 +110,7 @@ export default function ProductDetailPage() {
           buyerEmail: email.trim() || undefined,
           buyerPhone: phone.trim() || undefined,
           quantity,
+          size,
         }),
       });
 
@@ -184,12 +191,17 @@ export default function ProductDetailPage() {
 
           {/* PayFast checkout */}
           {canBuyNow && checkoutState === "idle" && (
-            <button
-              onClick={() => setCheckoutState("form")}
-              className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
-            >
-              Order &amp; Pay Online
-            </button>
+            <>
+              <button
+                onClick={() => setCheckoutState("form")}
+                className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
+              >
+                Order &amp; Pay Online
+              </button>
+              <p className="text-[10px] opacity-40 font-sans mt-3 text-center leading-relaxed">
+                Made to order &mdash; allow 5&ndash;10 working days for delivery
+              </p>
+            </>
           )}
 
           {/* WhatsApp enquiry — fallback for products without a price */}
@@ -259,6 +271,23 @@ export default function ProductDetailPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
                   />
+
+                  <div className="flex items-center gap-3 py-1">
+                    <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">
+                      Size *
+                    </label>
+                    <select
+                      required
+                      value={size}
+                      onChange={(e) => setSize(e.target.value)}
+                      className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                    >
+                      <option value="">Select size</option>
+                      {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
 
                   <div className="flex items-center gap-3 py-1">
                     <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">

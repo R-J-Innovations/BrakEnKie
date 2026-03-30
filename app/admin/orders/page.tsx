@@ -15,6 +15,7 @@ type Order = {
   buyer_phone: string | null;
   status: "pending" | "paid" | "cancelled" | "failed";
   payfast_payment_id: string | null;
+  size: string | null;
   created_at: string;
 };
 
@@ -133,6 +134,12 @@ export default function AdminOrders() {
                   <span className="opacity-40">Qty: </span>
                   {order.quantity} &times; R {order.product_price.toFixed(2)}
                 </div>
+                {order.size && (
+                  <div>
+                    <span className="opacity-40">Size: </span>
+                    {order.size}
+                  </div>
+                )}
                 {order.payfast_payment_id && (
                   <div>
                     <span className="opacity-40">PayFast ID: </span>

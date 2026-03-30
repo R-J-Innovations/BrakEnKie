@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
       buyerEmail,
       buyerPhone,
       quantity = 1,
+      size,
     } = body;
 
     if (!productId || !buyerFirstName || !buyerLastName) {
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
       buyer_last_name: buyerLastName,
       buyer_email: buyerEmail || null,
       buyer_phone: buyerPhone || null,
+      size: size || null,
       status: "pending",
     });
 

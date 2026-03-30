@@ -6,14 +6,24 @@ export type PayFastFields = Record<string, string>;
  * Builds the PayFast parameter string and generates an MD5 signature.
  * Field order matters — pass data in the order PayFast expects it.
  */
+/**
+ * PHP urlencode-compatible encoder (spaces → "+", encodes !'()*~ unlike encodeURIComponent).
+ * PayFast signature generation expects PHP urlencode behaviour.
+ */
+function pfEncode(str: string): string {
+  return encodeURIComponent(str)
+    .replace(/%20/g, "+")
+    .replace(/[!'()*~]/g, (c) => "%" + c.charCodeAt(0).toString(16).toUpperCase());
+}
+
 export function generateSignature(data: PayFastFields, passphrase?: string): string {
   const parts = Object.entries(data)
     .filter(([, v]) => v !== "" && v !== undefined && v !== null)
-    .map(([k, v]) => `${k}=${encodeURIComponent(v).replace(/%20/g, "+")}`);
+    .map(([k, v]) => `${k}=${pfEncode(v.trim())}`);
 
   let paramString = parts.join("&");
   if (passphrase) {
-    paramString += `&passphrase=${encodeURIComponent(passphrase).replace(/%20/g, "+")}`;
+    paramString += `&passphrase=${pfEncode(passphrase.trim())}`;
   }
 
   return crypto.createHash("md5").update(paramString).digest("hex");

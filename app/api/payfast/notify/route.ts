@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
         buyerEmail: order.buyer_email,
         buyerPhone: order.buyer_phone,
         paymentId,
+        size: order.size || undefined,
       });
     } else if (paymentStatus === "CANCELLED") {
       await supabaseAdmin

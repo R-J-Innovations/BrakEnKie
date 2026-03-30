@@ -27,10 +27,14 @@ function SuccessContent() {
           Your payment was successful. An invoice has been sent to{" "}
           <strong>info@brakenkie.co.za</strong>.
         </p>
-        <p className="opacity-45 leading-relaxed mb-10 font-light text-sm">
+        <p className="opacity-45 leading-relaxed mb-3 font-light text-sm">
           If you provided your email address, you will receive a copy of your
           invoice shortly. If you have any questions, please reach out via
           WhatsApp or email.
+        </p>
+        <p className="opacity-45 leading-relaxed mb-10 font-light text-sm">
+          As all orders are made to order, please allow{" "}
+          <strong>5–10 working days</strong> for delivery.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
