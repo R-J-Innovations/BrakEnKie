@@ -34,7 +34,7 @@ function SuccessContent() {
         </p>
         <p className="opacity-45 leading-relaxed mb-10 font-light text-sm">
           As all orders are made to order, please allow{" "}
-          <strong>5–10 working days</strong> for delivery.
+          <strong>7-14 working days</strong> for delivery.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
