@@ -92,7 +92,7 @@ export default function ProductDetailPage() {
       return;
     }
 
-    if (!size) {
+    if (!size && !isOneSize) {
       setFormError("Please select a size.");
       return;
     }
@@ -153,6 +153,15 @@ export default function ProductDetailPage() {
 
   const canBuyNow = product.price && product.price > 0;
 
+  const productKey = `${product.name} ${product.category}`.toLowerCase();
+  const sizeOptions: string[] =
+    productKey.includes("bucket")
+      ? ["S/M – 56cm", "L/XL – 59cm"]
+      : productKey.includes("cap")
+      ? ["One Size"]
+      : ["XS", "S", "M", "L", "XL", "XXL"];
+  const isOneSize = sizeOptions.length === 1;
+
   return (
     <main className="px-6 lg:px-16 py-16 max-w-7xl mx-auto w-full">
 
@@ -193,7 +202,7 @@ export default function ProductDetailPage() {
           {canBuyNow && checkoutState === "idle" && (
             <>
               <button
-                onClick={() => setCheckoutState("form")}
+                onClick={() => { setCheckoutState("form"); if (isOneSize) setSize(sizeOptions[0]); }}
                 className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
               >
                 Order &amp; Pay Online
@@ -274,19 +283,23 @@ export default function ProductDetailPage() {
 
                   <div className="flex items-center gap-3 py-1">
                     <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">
-                      Size *
+                      Size{!isOneSize && " *"}
                     </label>
-                    <select
-                      required
-                      value={size}
-                      onChange={(e) => setSize(e.target.value)}
-                      className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    >
-                      <option value="">Select size</option>
-                      {["XS", "S", "M", "L", "XL", "XXL"].map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
+                    {isOneSize ? (
+                      <span className="px-3 py-2 text-sm font-sans opacity-70">{sizeOptions[0]}</span>
+                    ) : (
+                      <select
+                        required
+                        value={size}
+                        onChange={(e) => setSize(e.target.value)}
+                        className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                      >
+                        <option value="">Select size</option>
+                        {sizeOptions.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3 py-1">
