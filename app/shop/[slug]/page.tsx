@@ -43,6 +43,8 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
   const [address, setAddress] = useState("");
+  const [complexName, setComplexName] = useState("");
+  const [streetNumber, setStreetNumber] = useState("");
   const [formError, setFormError] = useState("");
 
   // Address autocomplete state (Nominatim / OpenStreetMap — free, no API key)
@@ -149,6 +151,12 @@ export default function ProductDetailPage() {
 
     setCheckoutState("processing");
 
+    const fullAddress = [
+      complexName.trim(),
+      streetNumber.trim(),
+      address.trim(),
+    ].filter(Boolean).join(", ");
+
     try {
       const res = await fetch("/api/orders/create", {
         method: "POST",
@@ -161,7 +169,7 @@ export default function ProductDetailPage() {
           buyerPhone: phone.trim() || undefined,
           quantity,
           size,
-          deliveryAddress: address.trim(),
+          deliveryAddress: fullAddress,
           deliveryFee: DELIVERY_FEE,
         }),
       });
@@ -335,6 +343,23 @@ export default function ProductDetailPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
                   />
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      placeholder="Complex / Estate (optional)"
+                      value={complexName}
+                      onChange={(e) => setComplexName(e.target.value)}
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Street No. (optional)"
+                      value={streetNumber}
+                      onChange={(e) => setStreetNumber(e.target.value)}
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                    />
+                  </div>
 
                   {/* Delivery address with Nominatim (OpenStreetMap) autocomplete */}
                   <div className="relative">
