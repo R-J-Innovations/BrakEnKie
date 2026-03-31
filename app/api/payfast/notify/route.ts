@@ -74,14 +74,14 @@ export async function POST(req: NextRequest) {
       process.env.PAYFAST_PASSPHRASE
     );
 
+    const paymentStatus = data.payment_status;
+    const orderId = data.m_payment_id;
+
     if (receivedSignature !== expectedSignature) {
       console.error("PayFast ITN BLOCKED — signature mismatch", { receivedSignature, expectedSignature });
       return new NextResponse("Invalid signature", { status: 400 });
     }
     console.log("PayFast ITN signature OK — orderId:", orderId, "status:", paymentStatus);
-
-    const paymentStatus = data.payment_status;
-    const orderId = data.m_payment_id;
     const paymentId = data.pf_payment_id;
 
     if (!orderId) {
