@@ -14,11 +14,20 @@ export async function POST(req: NextRequest) {
       buyerPhone,
       quantity = 1,
       size,
+      deliveryAddress,
+      deliveryFee = 0,
     } = body;
 
     if (!productId || !buyerFirstName || !buyerLastName) {
       return NextResponse.json(
         { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    if (!deliveryAddress) {
+      return NextResponse.json(
+        { error: "Delivery address is required" },
         { status: 400 }
       );
     }
@@ -48,7 +57,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const totalAmount = parseFloat(product.price) * quantity;
+    const productTotal = parseFloat(product.price) * quantity;
+    const totalAmount = productTotal + parseFloat(deliveryFee);
     const orderId = uuidv4();
 
     // Create pending order
@@ -64,6 +74,8 @@ export async function POST(req: NextRequest) {
       buyer_email: buyerEmail || null,
       buyer_phone: buyerPhone || null,
       size: size || null,
+      delivery_address: deliveryAddress,
+      delivery_fee: parseFloat(deliveryFee),
       status: "pending",
     });
 

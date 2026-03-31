@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import PuppyGallery from "@/components/PuppyGallery";
@@ -18,6 +18,13 @@ type Product = {
 
 type CheckoutState = "idle" | "form" | "processing" | "redirecting";
 
+type AddressSuggestion = {
+  display_name: string;
+  place_id: string;
+};
+
+const DELIVERY_FEE = 99;
+
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -35,7 +42,13 @@ export default function ProductDetailPage() {
   const [phone, setPhone] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
+  const [address, setAddress] = useState("");
   const [formError, setFormError] = useState("");
+
+  // Address autocomplete state (Nominatim / OpenStreetMap — free, no API key)
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Hidden PayFast form ref — we populate + submit it programmatically
   const pfFormRef = useRef<HTMLFormElement>(null);
@@ -64,8 +77,6 @@ export default function ProductDetailPage() {
         return;
       }
 
-      console.log("Product data:", data);
-      console.log("Price value:", data.price, "| Type:", typeof data.price);
       setProduct(data);
       setLoading(false);
     }
@@ -75,6 +86,40 @@ export default function ProductDetailPage() {
       cancelled = true;
     };
   }, [slug, router]);
+
+  // Fetch address suggestions from Nominatim (OpenStreetMap) — free, no API key needed
+  const fetchSuggestions = useCallback(async (query: string) => {
+    if (query.length < 4) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=za&addressdetails=0&limit=5`,
+        { headers: { "Accept-Language": "en" } }
+      );
+      const results = await res.json();
+      setAddressSuggestions(results);
+      setShowSuggestions(results.length > 0);
+    } catch {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, []);
+
+  function handleAddressInput(value: string) {
+    setAddress(value);
+    setShowSuggestions(false);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => fetchSuggestions(value), 400);
+  }
+
+  function selectSuggestion(suggestion: AddressSuggestion) {
+    setAddress(suggestion.display_name);
+    setAddressSuggestions([]);
+    setShowSuggestions(false);
+  }
 
   // When pfData is set, submit the hidden form to PayFast
   useEffect(() => {
@@ -97,6 +142,11 @@ export default function ProductDetailPage() {
       return;
     }
 
+    if (!address.trim()) {
+      setFormError("Please enter your delivery address.");
+      return;
+    }
+
     setCheckoutState("processing");
 
     try {
@@ -111,6 +161,8 @@ export default function ProductDetailPage() {
           buyerPhone: phone.trim() || undefined,
           quantity,
           size,
+          deliveryAddress: address.trim(),
+          deliveryFee: DELIVERY_FEE,
         }),
       });
 
@@ -161,6 +213,9 @@ export default function ProductDetailPage() {
       ? ["One Size"]
       : ["XS", "S", "M", "L", "XL", "XXL"];
   const isOneSize = sizeOptions.length === 1;
+
+  const productTotal = product.price ? product.price * quantity : 0;
+  const grandTotal = productTotal + DELIVERY_FEE;
 
   return (
     <main className="px-6 lg:px-16 py-16 max-w-7xl mx-auto w-full">
@@ -281,6 +336,36 @@ export default function ProductDetailPage() {
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
                   />
 
+                  {/* Delivery address with Nominatim (OpenStreetMap) autocomplete */}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Delivery Address *"
+                      required
+                      value={address}
+                      onChange={(e) => handleAddressInput(e.target.value)}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                      autoComplete="off"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                    />
+                    {showSuggestions && addressSuggestions.length > 0 && (
+                      <ul className="absolute z-50 w-full bg-[var(--card)] border border-[var(--accent)]/20 shadow-lg mt-px max-h-52 overflow-y-auto">
+                        {addressSuggestions.map((s) => (
+                          <li
+                            key={s.place_id}
+                            onMouseDown={() => selectSuggestion(s)}
+                            className="px-4 py-3 text-xs font-sans cursor-pointer hover:bg-[var(--accent)]/10 border-b border-[var(--accent)]/8 last:border-0 leading-snug"
+                          >
+                            {s.display_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <p className="text-[10px] opacity-35 font-sans mt-1">
+                      Start typing your street address &mdash; select from the suggestions
+                    </p>
+                  </div>
+
                   <div className="flex items-center gap-3 py-1">
                     <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">
                       Size{!isOneSize && " *"}
@@ -315,11 +400,22 @@ export default function ProductDetailPage() {
                         <option key={n} value={n}>{n}</option>
                       ))}
                     </select>
-                    {product.price && quantity > 1 && (
-                      <span className="text-sm opacity-50 font-sans ml-auto">
-                        Total: R {(product.price * quantity).toFixed(2)}
-                      </span>
-                    )}
+                  </div>
+
+                  {/* Order summary */}
+                  <div className="border-t border-[var(--accent)]/10 pt-3 mt-1 space-y-1">
+                    <div className="flex justify-between text-xs font-sans opacity-55">
+                      <span>Product{quantity > 1 ? ` × ${quantity}` : ""}</span>
+                      <span>R {productTotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-xs font-sans opacity-55">
+                      <span>Courier Guy delivery</span>
+                      <span>R {DELIVERY_FEE.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-sans font-medium border-t border-[var(--accent)]/10 pt-2 mt-1">
+                      <span>Total</span>
+                      <span className="text-[var(--accent)]">R {grandTotal.toFixed(2)}</span>
+                    </div>
                   </div>
 
                   {formError && (
@@ -335,7 +431,7 @@ export default function ProductDetailPage() {
                     disabled={checkoutState === "processing"}
                     className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300 disabled:opacity-40"
                   >
-                    {checkoutState === "processing" ? "Processing…" : `Pay R ${product.price ? (product.price * quantity).toFixed(2) : ""} via PayFast`}
+                    {checkoutState === "processing" ? "Processing…" : `Pay R ${grandTotal.toFixed(2)} via PayFast`}
                   </button>
 
                   <p className="text-[10px] opacity-25 font-sans text-center">

@@ -16,6 +16,8 @@ type Order = {
   status: "pending" | "paid" | "cancelled" | "failed";
   payfast_payment_id: string | null;
   size: string | null;
+  delivery_address: string | null;
+  delivery_fee: number;
   created_at: string;
 };
 
@@ -138,6 +140,18 @@ export default function AdminOrders() {
                   <div>
                     <span className="opacity-40">Size: </span>
                     {order.size}
+                  </div>
+                )}
+                {order.delivery_address && (
+                  <div className="sm:col-span-2">
+                    <span className="opacity-40">Deliver to: </span>
+                    {order.delivery_address}
+                  </div>
+                )}
+                {order.delivery_fee > 0 && (
+                  <div>
+                    <span className="opacity-40">Delivery fee: </span>
+                    R {order.delivery_fee.toFixed(2)}
                   </div>
                 )}
                 {order.payfast_payment_id && (

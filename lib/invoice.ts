@@ -11,6 +11,8 @@ export interface InvoiceData {
   buyerPhone?: string;
   paymentId?: string;
   size?: string;
+  deliveryAddress?: string;
+  deliveryFee?: number;
 }
 
 export function generateInvoiceHtml(data: InvoiceData): string {
@@ -20,6 +22,9 @@ export function generateInvoiceHtml(data: InvoiceData): string {
     month: "long",
     day: "numeric",
   });
+
+  const productSubtotal = data.productPrice * data.quantity;
+  const deliveryFee = data.deliveryFee ?? 0;
 
   return `
 <!DOCTYPE html>
@@ -98,6 +103,7 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                     </p>
                     ${data.buyerEmail ? `<p style="margin:2px 0 0;color:#666;font-size:12px;font-family:Arial,sans-serif;">${data.buyerEmail}</p>` : ""}
                     ${data.buyerPhone ? `<p style="margin:2px 0 0;color:#666;font-size:12px;font-family:Arial,sans-serif;">${data.buyerPhone}</p>` : ""}
+                    ${data.deliveryAddress ? `<p style="margin:6px 0 0;color:#666;font-size:12px;font-family:Arial,sans-serif;line-height:1.5;">${data.deliveryAddress}</p>` : ""}
                   </td>
                 </tr>
               </table>
@@ -134,9 +140,19 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                     R ${data.productPrice.toFixed(2)}
                   </td>
                   <td align="right" style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
-                    R ${(data.productPrice * data.quantity).toFixed(2)}
+                    R ${productSubtotal.toFixed(2)}
                   </td>
                 </tr>
+                ${deliveryFee > 0 ? `
+                <tr>
+                  <td colspan="3" style="padding:12px 0;color:#666;font-size:13px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
+                    Courier Guy Delivery
+                  </td>
+                  <td align="right" style="padding:12px 0;color:#1a1a1a;font-size:13px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
+                    R ${deliveryFee.toFixed(2)}
+                  </td>
+                </tr>
+                ` : ""}
               </table>
 
               <!-- Total -->
@@ -148,9 +164,17 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                       <tr>
                         <td style="padding:8px 0;color:#888;font-size:12px;font-family:Arial,sans-serif;">Subtotal</td>
                         <td align="right" style="padding:8px 0;color:#1a1a1a;font-size:12px;font-family:Arial,sans-serif;">
-                          R ${data.totalAmount.toFixed(2)}
+                          R ${productSubtotal.toFixed(2)}
                         </td>
                       </tr>
+                      ${deliveryFee > 0 ? `
+                      <tr>
+                        <td style="padding:8px 0;color:#888;font-size:12px;font-family:Arial,sans-serif;">Delivery</td>
+                        <td align="right" style="padding:8px 0;color:#1a1a1a;font-size:12px;font-family:Arial,sans-serif;">
+                          R ${deliveryFee.toFixed(2)}
+                        </td>
+                      </tr>
+                      ` : ""}
                       <tr>
                         <td colspan="2" style="border-top:2px solid #1a1a1a;padding-top:12px;">
                           <table width="100%" cellpadding="0" cellspacing="0">
@@ -186,7 +210,7 @@ export function generateInvoiceHtml(data: InvoiceData): string {
             <td style="padding:0 48px 24px;">
               <div style="background:#f8f5f0;border-left:3px solid #c9a96e;padding:14px 16px;">
                 <p style="margin:0;color:#555;font-size:12px;font-family:Arial,sans-serif;line-height:1.6;">
-                  <strong style="color:#1a1a1a;">Delivery:</strong> 5–10 working days. All orders are made to order — please allow time for production before dispatch.
+                  <strong style="color:#1a1a1a;">Delivery:</strong> 5–10 working days via The Courier Guy. All orders are made to order — please allow time for production before dispatch.
                 </p>
               </div>
             </td>

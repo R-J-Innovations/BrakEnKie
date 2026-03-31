@@ -5,6 +5,7 @@ import { sendOrderEmails } from "@/lib/email";
 
 // PayFast valid IP ranges for ITN
 const PAYFAST_IPS = [
+  // Production range
   "197.97.145.144",
   "197.97.145.145",
   "197.97.145.146",
@@ -21,6 +22,23 @@ const PAYFAST_IPS = [
   "197.97.145.157",
   "197.97.145.158",
   "197.97.145.159",
+  // Additional production IPs
+  "41.74.179.194",
+  "41.74.179.195",
+  "41.74.179.196",
+  "41.74.179.197",
+  "41.74.179.198",
+  "41.74.179.199",
+  "41.74.179.200",
+  "41.74.179.201",
+  "41.74.179.202",
+  "41.74.179.203",
+  "41.74.179.204",
+  "41.74.179.205",
+  "41.74.179.206",
+  "41.74.179.207",
+  "41.74.179.208",
+  "41.74.179.209",
   // Sandbox
   "197.97.145.208",
 ];
@@ -29,13 +47,14 @@ export async function POST(req: NextRequest) {
   try {
     // Verify source IP (skip in dev/sandbox)
     const isSandbox = process.env.PAYFAST_SANDBOX === "true";
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "";
+    console.log("PayFast ITN received from IP:", ip, "| sandbox:", isSandbox);
     if (!isSandbox) {
-      const ip =
-        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-        req.headers.get("x-real-ip") ||
-        "";
       if (!PAYFAST_IPS.includes(ip)) {
-        console.warn("PayFast ITN from unrecognised IP:", ip);
+        console.warn("PayFast ITN BLOCKED — unrecognised IP:", ip);
         return new NextResponse("Forbidden", { status: 403 });
       }
     }
@@ -56,9 +75,10 @@ export async function POST(req: NextRequest) {
     );
 
     if (receivedSignature !== expectedSignature) {
-      console.error("PayFast signature mismatch", { receivedSignature, expectedSignature });
+      console.error("PayFast ITN BLOCKED — signature mismatch", { receivedSignature, expectedSignature });
       return new NextResponse("Invalid signature", { status: 400 });
     }
+    console.log("PayFast ITN signature OK — orderId:", orderId, "status:", paymentStatus);
 
     const paymentStatus = data.payment_status;
     const orderId = data.m_payment_id;
@@ -83,7 +103,7 @@ export async function POST(req: NextRequest) {
     // Verify amount matches (important anti-fraud check)
     const itnAmount = parseFloat(data.amount_gross || "0");
     if (Math.abs(itnAmount - order.total_amount) > 0.01) {
-      console.error("Amount mismatch", { itnAmount, expected: order.total_amount });
+      console.error("PayFast ITN BLOCKED — amount mismatch", { itnAmount, expected: order.total_amount });
       return new NextResponse("Amount mismatch", { status: 400 });
     }
 
@@ -112,6 +132,8 @@ export async function POST(req: NextRequest) {
         buyerPhone: order.buyer_phone,
         paymentId,
         size: order.size || undefined,
+        deliveryAddress: order.delivery_address || undefined,
+        deliveryFee: order.delivery_fee ?? 0,
       });
     } else if (paymentStatus === "CANCELLED") {
       await supabaseAdmin
