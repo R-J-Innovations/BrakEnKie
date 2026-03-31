@@ -5,7 +5,7 @@ import { sendOrderEmails } from "@/lib/email";
 
 // PayFast valid IP ranges for ITN
 const PAYFAST_IPS = [
-  // Production range
+  // Legacy on-premises range (kept during transition)
   "197.97.145.144",
   "197.97.145.145",
   "197.97.145.146",
@@ -22,41 +22,47 @@ const PAYFAST_IPS = [
   "197.97.145.157",
   "197.97.145.158",
   "197.97.145.159",
-  // Additional production IPs
-  "41.74.179.194",
-  "41.74.179.195",
-  "41.74.179.196",
-  "41.74.179.197",
-  "41.74.179.198",
-  "41.74.179.199",
-  "41.74.179.200",
-  "41.74.179.201",
-  "41.74.179.202",
-  "41.74.179.203",
-  "41.74.179.204",
-  "41.74.179.205",
-  "41.74.179.206",
-  "41.74.179.207",
-  "41.74.179.208",
-  "41.74.179.209",
-  // Sandbox
+  // Legacy sandbox
   "197.97.145.208",
+  // New AWS IPs (effective 31 July 2025)
+  "3.163.236.237",
+  "3.163.238.237",
+  "3.163.251.237",
+  "3.163.232.237",
+  "3.163.241.237",
+  "3.163.245.237",
+  "3.163.248.237",
+  "3.163.234.237",
+  "3.163.237.237",
+  "3.163.243.237",
+  "3.163.247.237",
+  "3.163.242.237",
+  "3.163.244.237",
+  "3.163.249.237",
+  "3.163.252.237",
+  "3.163.235.237",
+  "3.163.239.237",
+  "3.163.250.237",
+  "3.163.233.237",
+  "3.163.246.237",
+  "3.163.240.237",
 ];
 
 export async function POST(req: NextRequest) {
   try {
-    // Verify source IP (skip in dev/sandbox)
-    const isSandbox = process.env.PAYFAST_SANDBOX === "true";
+    // Extract real IP — check Cloudflare, Vercel, and standard headers
     const ip =
+      req.headers.get("cf-connecting-ip") ||
+      req.headers.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
       req.headers.get("x-real-ip") ||
       "";
-    console.log("PayFast ITN received from IP:", ip, "| sandbox:", isSandbox);
-    if (!isSandbox) {
-      if (!PAYFAST_IPS.includes(ip)) {
-        console.warn("PayFast ITN BLOCKED — unrecognised IP:", ip);
-        return new NextResponse("Forbidden", { status: 403 });
-      }
+    const isSandbox = process.env.PAYFAST_SANDBOX === "true";
+    const ipAllowed = PAYFAST_IPS.includes(ip);
+    console.log("PayFast ITN received | IP:", ip, "| allowed:", ipAllowed, "| sandbox:", isSandbox);
+    if (!isSandbox && !ipAllowed) {
+      console.warn("PayFast ITN BLOCKED — unrecognised IP:", ip);
+      return new NextResponse("Forbidden", { status: 403 });
     }
 
     // Parse body (PayFast sends application/x-www-form-urlencoded)
