@@ -58,7 +58,7 @@ export default function AdminOrders() {
 
   const totalRevenue = orders
     .filter((o) => o.status === "paid")
-    .reduce((sum, o) => sum + o.total_amount, 0);
+    .reduce((sum, o) => sum + (o.total_amount ?? 0), 0);
 
   return (
     <div className="min-h-screen p-10">
@@ -100,7 +100,7 @@ export default function AdminOrders() {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <p className="text-lg font-serif text-[var(--accent)]">
-                    R {order.total_amount.toFixed(2)}
+                    R {(order.total_amount ?? 0).toFixed(2)}
                   </p>
                   <span
                     className={`px-3 py-1 rounded-full text-[10px] font-sans tracking-widest uppercase ${statusStyles[order.status] || "bg-stone-300"}`}
@@ -134,7 +134,7 @@ export default function AdminOrders() {
                 )}
                 <div>
                   <span className="opacity-40">Qty: </span>
-                  {order.quantity} &times; R {order.product_price.toFixed(2)}
+                  {order.quantity} &times; R {(order.product_price ?? 0).toFixed(2)}
                 </div>
                 {order.size && (
                   <div>
@@ -151,7 +151,7 @@ export default function AdminOrders() {
                 {order.delivery_fee > 0 && (
                   <div>
                     <span className="opacity-40">Delivery fee: </span>
-                    R {order.delivery_fee.toFixed(2)}
+                    R {(order.delivery_fee ?? 0).toFixed(2)}
                   </div>
                 )}
                 {order.payfast_payment_id && (
