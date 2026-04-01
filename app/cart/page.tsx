@@ -85,6 +85,10 @@ export default function CartPage() {
       setFormError("Please enter your delivery address.");
       return;
     }
+    if (email.trim().toLowerCase() === "info@brakenkie.co.za") {
+      setFormError("Please use your personal email address, not the store email.");
+      return;
+    }
 
     setCheckoutState("processing");
 
@@ -273,7 +277,8 @@ export default function CartPage() {
             </div>
             <input
               type="email"
-              placeholder="Email (for invoice)"
+              placeholder="Email *"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
@@ -352,9 +357,6 @@ export default function CartPage() {
               <p className="text-red-500 text-xs font-sans">{formError}</p>
             )}
 
-            <p className="text-[10px] opacity-35 font-sans leading-relaxed">
-              No email? An invoice will be sent to info@brakenkie.co.za who will forward it to you.
-            </p>
 
             <button
               type="submit"

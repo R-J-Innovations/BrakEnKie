@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!buyerFirstName || !buyerLastName) {
+    if (!buyerFirstName || !buyerLastName || !buyerEmail) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
