@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   images: {
@@ -6,6 +7,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "placehold.co" },
       { protocol: "https", hostname: "*.supabase.co" },
     ],
+  },
+  turbopack: {
+    root: path.resolve(__dirname),
   },
 };
 

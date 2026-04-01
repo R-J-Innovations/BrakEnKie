@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import PuppyGallery from "@/components/PuppyGallery";
 import Link from "next/link";
+import { useCart } from "@/contexts/CartContext";
 
 type Product = {
   id: string;
@@ -16,45 +17,19 @@ type Product = {
   product_images: { image_url: string }[];
 };
 
-type CheckoutState = "idle" | "form" | "processing" | "redirecting";
-
-type AddressSuggestion = {
-  display_name: string;
-  place_id: string;
-};
-
-const DELIVERY_FEE = 99;
-
 export default function ProductDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const { slug } = params as { slug: string };
+  const { addItem } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  const [checkoutState, setCheckoutState] = useState<CheckoutState>("idle");
 
-  // Buyer form fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
-  const [address, setAddress] = useState("");
-  const [complexName, setComplexName] = useState("");
-  const [streetNumber, setStreetNumber] = useState("");
-  const [formError, setFormError] = useState("");
-
-  // Address autocomplete state (Nominatim / OpenStreetMap — free, no API key)
-  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Hidden PayFast form ref — we populate + submit it programmatically
-  const pfFormRef = useRef<HTMLFormElement>(null);
-  const [pfData, setPfData] = useState<{ url: string; fields: Record<string, string> } | null>(null);
+  const [added, setAdded] = useState(false);
+  const [sizeError, setSizeError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,7 +48,6 @@ export default function ProductDetailPage() {
       if (cancelled) return;
 
       if (error || !data) {
-        console.error("Fetch error:", error);
         setFetchError(error?.message || "Product not found");
         setLoading(false);
         return;
@@ -84,111 +58,8 @@ export default function ProductDetailPage() {
     }
 
     if (slug) fetchProduct();
-    return () => {
-      cancelled = true;
-    };
-  }, [slug, router]);
-
-  // Fetch address suggestions from Nominatim (OpenStreetMap) — free, no API key needed
-  const fetchSuggestions = useCallback(async (query: string) => {
-    if (query.length < 4) {
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=za&addressdetails=0&limit=5`,
-        { headers: { "Accept-Language": "en" } }
-      );
-      const results = await res.json();
-      setAddressSuggestions(results);
-      setShowSuggestions(results.length > 0);
-    } catch {
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, []);
-
-  function handleAddressInput(value: string) {
-    setAddress(value);
-    setShowSuggestions(false);
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => fetchSuggestions(value), 400);
-  }
-
-  function selectSuggestion(suggestion: AddressSuggestion) {
-    setAddress(suggestion.display_name);
-    setAddressSuggestions([]);
-    setShowSuggestions(false);
-  }
-
-  // When pfData is set, submit the hidden form to PayFast
-  useEffect(() => {
-    if (pfData && pfFormRef.current) {
-      pfFormRef.current.submit();
-    }
-  }, [pfData]);
-
-  async function handleCheckout(e: React.FormEvent) {
-    e.preventDefault();
-    setFormError("");
-
-    if (!firstName.trim() || !lastName.trim()) {
-      setFormError("Please enter your first and last name.");
-      return;
-    }
-
-    if (!size && !isOneSize) {
-      setFormError("Please select a size.");
-      return;
-    }
-
-    if (!address.trim()) {
-      setFormError("Please enter your delivery address.");
-      return;
-    }
-
-    setCheckoutState("processing");
-
-    const fullAddress = [
-      complexName.trim(),
-      streetNumber.trim(),
-      address.trim(),
-    ].filter(Boolean).join(", ");
-
-    try {
-      const res = await fetch("/api/orders/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product!.id,
-          buyerFirstName: firstName.trim(),
-          buyerLastName: lastName.trim(),
-          buyerEmail: email.trim() || undefined,
-          buyerPhone: phone.trim() || undefined,
-          quantity,
-          size,
-          deliveryAddress: fullAddress,
-          deliveryFee: DELIVERY_FEE,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setFormError(data.error || "Something went wrong. Please try again.");
-        setCheckoutState("form");
-        return;
-      }
-
-      setCheckoutState("redirecting");
-      setPfData({ url: data.url, fields: data.fields });
-    } catch {
-      setFormError("Network error. Please try again.");
-      setCheckoutState("form");
-    }
-  }
+    return () => { cancelled = true; };
+  }, [slug]);
 
   if (loading)
     return (
@@ -222,8 +93,26 @@ export default function ProductDetailPage() {
       : ["XS", "S", "M", "L", "XL", "XXL"];
   const isOneSize = sizeOptions.length === 1;
 
-  const productTotal = product.price ? product.price * quantity : 0;
-  const grandTotal = productTotal + DELIVERY_FEE;
+  function handleAddToCart() {
+    if (!product || !canBuyNow) return;
+    const selectedSize = isOneSize ? sizeOptions[0] : size;
+    if (!isOneSize && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+    setSizeError(false);
+    addItem({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price!,
+      imageUrl: product.product_images?.[0]?.image_url,
+      quantity,
+      size: selectedSize || undefined,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2500);
+  }
 
   return (
     <main className="px-6 lg:px-16 py-16 max-w-7xl mx-auto w-full">
@@ -261,23 +150,85 @@ export default function ProductDetailPage() {
 
           <p className="opacity-55 leading-relaxed mb-10 font-light">{product.description}</p>
 
-          {/* PayFast checkout */}
-          {canBuyNow && checkoutState === "idle" && (
-            <>
+          {canBuyNow ? (
+            <div className="space-y-4">
+              {/* Size selector */}
+              {!isOneSize && (
+                <div className="flex items-center gap-3">
+                  <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans w-10">
+                    Size
+                  </label>
+                  <select
+                    value={size}
+                    onChange={(e) => { setSize(e.target.value); setSizeError(false); }}
+                    className={`px-3 py-2 bg-[var(--bg)] border focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors ${
+                      sizeError ? "border-red-400" : "border-[var(--accent)]/15"
+                    }`}
+                  >
+                    <option value="">Select size</option>
+                    {sizeOptions.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  {sizeError && (
+                    <span className="text-red-400 text-[11px] font-sans">Required</span>
+                  )}
+                </div>
+              )}
+              {isOneSize && (
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans w-10">Size</span>
+                  <span className="text-sm font-sans opacity-70">{sizeOptions[0]}</span>
+                </div>
+              )}
+
+              {/* Quantity selector */}
+              <div className="flex items-center gap-3">
+                <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans w-10">
+                  Qty
+                </label>
+                <select
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
+                >
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Add to cart button */}
               <button
-                onClick={() => { setCheckoutState("form"); if (isOneSize) setSize(sizeOptions[0]); }}
-                className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300"
+                onClick={handleAddToCart}
+                className={`block w-full text-center px-8 py-4 text-[11px] tracking-[0.3em] uppercase font-sans transition-all duration-300 ${
+                  added
+                    ? "bg-green-600 text-white"
+                    : "bg-[var(--accent)] text-black hover:bg-[var(--accent-hover)]"
+                }`}
               >
-                Order &amp; Pay Online
+                {added ? "Added to Cart \u2713" : "Add to Cart"}
               </button>
-              <p className="text-[10px] opacity-40 font-sans mt-3 text-center leading-relaxed">
+
+              {added && (
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] opacity-50 font-sans">
+                    Item added to your cart
+                  </p>
+                  <Link
+                    href="/cart"
+                    className="text-[11px] tracking-[0.2em] uppercase text-[var(--accent)] hover:opacity-70 font-sans transition-opacity"
+                  >
+                    View Cart &rarr;
+                  </Link>
+                </div>
+              )}
+
+              <p className="text-[10px] opacity-35 font-sans leading-relaxed">
                 Made to order &mdash; allow 7&ndash;14 working days for delivery
               </p>
-            </>
-          )}
-
-          {/* WhatsApp enquiry — fallback for products without a price */}
-          {!canBuyNow && (
+            </div>
+          ) : (
             <a
               href={`https://wa.me/27718981890?text=Hi%2C%20I%20am%20interested%20in%20${encodeURIComponent(product.name)}`}
               target="_blank"
@@ -287,201 +238,8 @@ export default function ProductDetailPage() {
               Enquire on WhatsApp
             </a>
           )}
-
-          {/* Checkout form */}
-          {canBuyNow && (checkoutState === "form" || checkoutState === "processing" || checkoutState === "redirecting") && (
-            <div className="mt-2 border border-[var(--accent)]/15 p-6 bg-[var(--card)]">
-              <div className="flex items-center justify-between mb-5">
-                <p className="text-[10px] tracking-[0.3em] uppercase opacity-50 font-sans">
-                  Secure Checkout
-                </p>
-                {checkoutState === "form" && (
-                  <button
-                    onClick={() => { setCheckoutState("idle"); setFormError(""); }}
-                    className="text-[10px] tracking-[0.2em] uppercase opacity-35 hover:opacity-70 transition-opacity font-sans"
-                  >
-                    Cancel
-                  </button>
-                )}
-              </div>
-
-              {checkoutState === "redirecting" ? (
-                <p className="text-center text-[11px] tracking-[0.3em] uppercase opacity-40 font-sans animate-pulse py-8">
-                  Redirecting to payment&hellip;
-                </p>
-              ) : (
-                <form onSubmit={handleCheckout} className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="First Name *"
-                      required
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name *"
-                      required
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    />
-                  </div>
-                  <input
-                    type="email"
-                    placeholder="Email (for invoice)"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone (optional)"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                  />
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="text"
-                      placeholder="Complex / Estate (optional)"
-                      value={complexName}
-                      onChange={(e) => setComplexName(e.target.value)}
-                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Street No. (optional)"
-                      value={streetNumber}
-                      onChange={(e) => setStreetNumber(e.target.value)}
-                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    />
-                  </div>
-
-                  {/* Delivery address with Nominatim (OpenStreetMap) autocomplete */}
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Delivery Address *"
-                      required
-                      value={address}
-                      onChange={(e) => handleAddressInput(e.target.value)}
-                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                      autoComplete="off"
-                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    />
-                    {showSuggestions && addressSuggestions.length > 0 && (
-                      <ul className="absolute z-50 w-full bg-[var(--card)] border border-[var(--accent)]/20 shadow-lg mt-px max-h-52 overflow-y-auto">
-                        {addressSuggestions.map((s) => (
-                          <li
-                            key={s.place_id}
-                            onMouseDown={() => selectSuggestion(s)}
-                            className="px-4 py-3 text-xs font-sans cursor-pointer hover:bg-[var(--accent)]/10 border-b border-[var(--accent)]/8 last:border-0 leading-snug"
-                          >
-                            {s.display_name}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    <p className="text-[10px] opacity-35 font-sans mt-1">
-                      Start typing your street address &mdash; select from the suggestions
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3 py-1">
-                    <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">
-                      Size{!isOneSize && " *"}
-                    </label>
-                    {isOneSize ? (
-                      <span className="px-3 py-2 text-sm font-sans opacity-70">{sizeOptions[0]}</span>
-                    ) : (
-                      <select
-                        required
-                        value={size}
-                        onChange={(e) => setSize(e.target.value)}
-                        className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                      >
-                        <option value="">Select size</option>
-                        {sizeOptions.map((s) => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-3 py-1">
-                    <label className="text-[11px] tracking-[0.2em] uppercase opacity-50 font-sans">
-                      Qty
-                    </label>
-                    <select
-                      value={quantity}
-                      onChange={(e) => setQuantity(Number(e.target.value))}
-                      className="px-3 py-2 bg-[var(--bg)] border border-[var(--accent)]/15 focus:border-[var(--accent)]/40 outline-none text-sm font-sans transition-colors"
-                    >
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Order summary */}
-                  <div className="border-t border-[var(--accent)]/10 pt-3 mt-1 space-y-1">
-                    <div className="flex justify-between text-xs font-sans opacity-55">
-                      <span>Product{quantity > 1 ? ` × ${quantity}` : ""}</span>
-                      <span>R {productTotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-xs font-sans opacity-55">
-                      <span>Courier Guy delivery</span>
-                      <span>R {DELIVERY_FEE.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm font-sans font-medium border-t border-[var(--accent)]/10 pt-2 mt-1">
-                      <span>Total</span>
-                      <span className="text-[var(--accent)]">R {grandTotal.toFixed(2)}</span>
-                    </div>
-                  </div>
-
-                  {formError && (
-                    <p className="text-red-500 text-xs font-sans">{formError}</p>
-                  )}
-
-                  <p className="text-[10px] opacity-35 font-sans leading-relaxed">
-                    No email? An invoice will be sent to info@brakenkie.co.za who will forward it to you.
-                  </p>
-
-                  <button
-                    type="submit"
-                    disabled={checkoutState === "processing"}
-                    className="block w-full text-center px-8 py-4 bg-[var(--accent)] text-black text-[11px] tracking-[0.3em] uppercase font-sans hover:bg-[var(--accent-hover)] transition-all duration-300 disabled:opacity-40"
-                  >
-                    {checkoutState === "processing" ? "Processing…" : `Pay R ${grandTotal.toFixed(2)} via PayFast`}
-                  </button>
-
-                  <p className="text-[10px] opacity-25 font-sans text-center">
-                    Secured by PayFast &mdash; South Africa&apos;s trusted payment gateway
-                  </p>
-                </form>
-              )}
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Hidden PayFast form — auto-submitted when pfData is set */}
-      {pfData && (
-        <form
-          ref={pfFormRef}
-          method="POST"
-          action={pfData.url}
-          style={{ display: "none" }}
-        >
-          {Object.entries(pfData.fields).map(([key, value]) => (
-            <input key={key} type="hidden" name={key} value={value} />
-          ))}
-        </form>
-      )}
     </main>
   );
 }

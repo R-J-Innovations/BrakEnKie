@@ -1,16 +1,20 @@
-export interface InvoiceData {
-  orderId: string;
-  orderDate: string;
+export interface OrderLineItem {
   productName: string;
   productPrice: number;
   quantity: number;
+  size?: string;
+}
+
+export interface InvoiceData {
+  orderId: string;
+  orderDate: string;
+  items: OrderLineItem[];
   totalAmount: number;
   buyerFirstName: string;
   buyerLastName: string;
   buyerEmail?: string;
   buyerPhone?: string;
   paymentId?: string;
-  size?: string;
   deliveryAddress?: string;
   deliveryFee?: number;
 }
@@ -23,8 +27,32 @@ export function generateInvoiceHtml(data: InvoiceData): string {
     day: "numeric",
   });
 
-  const productSubtotal = data.productPrice * data.quantity;
+  const itemsSubtotal = data.items.reduce(
+    (sum, item) => sum + item.productPrice * item.quantity,
+    0
+  );
   const deliveryFee = data.deliveryFee ?? 0;
+
+  const lineItemsHtml = data.items
+    .map(
+      (item) => `
+    <tr>
+      <td style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:'Georgia',serif;border-bottom:1px solid #f0ebe3;">
+        ${item.productName}
+        ${item.size ? `<span style="display:block;color:#888;font-size:11px;font-family:Arial,sans-serif;margin-top:3px;">Size: ${item.size}</span>` : ""}
+      </td>
+      <td align="center" style="padding:16px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
+        ${item.quantity}
+      </td>
+      <td align="right" style="padding:16px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
+        R ${item.productPrice.toFixed(2)}
+      </td>
+      <td align="right" style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
+        R ${(item.productPrice * item.quantity).toFixed(2)}
+      </td>
+    </tr>`
+    )
+    .join("");
 
   return `
 <!DOCTYPE html>
@@ -128,21 +156,7 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                     Total
                   </td>
                 </tr>
-                <tr>
-                  <td style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:'Georgia',serif;border-bottom:1px solid #f0ebe3;">
-                    ${data.productName}
-                    ${data.size ? `<span style="display:block;color:#888;font-size:11px;font-family:Arial,sans-serif;margin-top:3px;">Size: ${data.size}</span>` : ""}
-                  </td>
-                  <td align="center" style="padding:16px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
-                    ${data.quantity}
-                  </td>
-                  <td align="right" style="padding:16px 0;color:#666;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
-                    R ${data.productPrice.toFixed(2)}
-                  </td>
-                  <td align="right" style="padding:16px 0;color:#1a1a1a;font-size:14px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
-                    R ${productSubtotal.toFixed(2)}
-                  </td>
-                </tr>
+                ${lineItemsHtml}
                 ${deliveryFee > 0 ? `
                 <tr>
                   <td colspan="3" style="padding:12px 0;color:#666;font-size:13px;font-family:Arial,sans-serif;border-bottom:1px solid #f0ebe3;">
@@ -164,7 +178,7 @@ export function generateInvoiceHtml(data: InvoiceData): string {
                       <tr>
                         <td style="padding:8px 0;color:#888;font-size:12px;font-family:Arial,sans-serif;">Subtotal</td>
                         <td align="right" style="padding:8px 0;color:#1a1a1a;font-size:12px;font-family:Arial,sans-serif;">
-                          R ${productSubtotal.toFixed(2)}
+                          R ${itemsSubtotal.toFixed(2)}
                         </td>
                       </tr>
                       ${deliveryFee > 0 ? `

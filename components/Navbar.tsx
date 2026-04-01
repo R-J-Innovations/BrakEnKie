@@ -4,6 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import { useCart } from "@/contexts/CartContext";
 
 const links = [
   { href: "/available",  label: "Available" },
@@ -16,6 +17,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   // Close menu on navigation
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -53,6 +55,18 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
+            <Link href="/cart" className="relative opacity-45 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300" aria-label="Cart">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 w-4 h-4 rounded-full bg-[var(--accent)] text-black text-[9px] font-sans font-bold flex items-center justify-center leading-none">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </Link>
             <ThemeToggle />
           </div>
 
@@ -110,6 +124,17 @@ export default function Navbar() {
                 {label}
               </Link>
             ))}
+            <Link
+              href="/cart"
+              className="text-[13px] tracking-[0.3em] uppercase font-sans opacity-50 hover:opacity-100 hover:text-[var(--accent)] transition-all duration-300 flex items-center gap-2"
+            >
+              Cart
+              {itemCount > 0 && (
+                <span className="w-5 h-5 rounded-full bg-[var(--accent)] text-black text-[9px] font-bold flex items-center justify-center leading-none">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </Link>
           </nav>
 
           {/* Decorative gold line */}

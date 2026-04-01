@@ -124,21 +124,34 @@ export async function POST(req: NextRequest) {
         })
         .eq("id", orderId);
 
+      // Fetch order items for the invoice
+      const { data: orderItems } = await supabaseAdmin
+        .from("order_items")
+        .select("product_name, product_price, quantity, size")
+        .eq("order_id", orderId);
+
+      const invoiceItems =
+        orderItems && orderItems.length > 0
+          ? orderItems.map((i) => ({
+              productName: i.product_name,
+              productPrice: i.product_price,
+              quantity: i.quantity,
+              size: i.size ?? undefined,
+            }))
+          : [];
+
       // Send invoice emails
       await sendOrderEmails({
         orderId: order.id,
         orderDate: order.created_at,
-        productName: order.product_name,
-        productPrice: order.product_price,
-        quantity: order.quantity,
+        items: invoiceItems,
         totalAmount: order.total_amount,
         buyerFirstName: order.buyer_first_name,
         buyerLastName: order.buyer_last_name,
         buyerEmail: order.buyer_email,
         buyerPhone: order.buyer_phone,
         paymentId,
-        size: order.size || undefined,
-        deliveryAddress: order.delivery_address || undefined,
+        deliveryAddress: order.delivery_address ?? undefined,
         deliveryFee: order.delivery_fee ?? 0,
       });
     } else if (paymentStatus === "CANCELLED") {

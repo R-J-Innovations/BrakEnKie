@@ -13,7 +13,13 @@ const STORE_EMAIL = "info@brakenkie.co.za";
 export async function sendOrderEmails(data: InvoiceData): Promise<void> {
   const invoiceHtml = generateInvoiceHtml(data);
   const invoiceNumber = `BK-${data.orderId.substring(0, 8).toUpperCase()}`;
-  const subject = `Order Confirmed — ${data.productName} (${invoiceNumber})`;
+
+  const itemSummary =
+    data.items.length === 1
+      ? data.items[0].productName
+      : `${data.items[0].productName} + ${data.items.length - 1} more`;
+
+  const subject = `Order Confirmed — ${itemSummary} (${invoiceNumber})`;
 
   // Always send to the store
   await resend.emails.send({

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import PageTransition from "../components/PageTransition";
+import Providers from "../components/Providers";
 import { Analytics } from "@vercel/analytics/next";
 
 const cormorant = Cormorant_Garamond({
@@ -143,9 +144,11 @@ export default function RootLayout({
           async
           src="https://ai-chatbot-backend-production-d810.up.railway.app/chatbot.js"
         ></script>
-        <Navbar />
-        <PageTransition>{children}</PageTransition>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <PageTransition>{children}</PageTransition>
+          <Footer />
+        </Providers>
         <Analytics />
       </body>
     </html>
