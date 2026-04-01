@@ -1,11 +1,18 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 function SuccessContent() {
   const params = useSearchParams();
   const orderId = params.get("order_id");
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const invoiceNumber = orderId
     ? `BK-${orderId.substring(0, 8).toUpperCase()}`
     : null;

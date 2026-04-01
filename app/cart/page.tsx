@@ -122,7 +122,6 @@ export default function CartPage() {
         return;
       }
 
-      clearCart();
       setCheckoutState("redirecting");
       setPfData({ url: data.url, fields: data.fields });
     } catch {
@@ -133,7 +132,7 @@ export default function CartPage() {
 
   const grandTotal = subtotal + DELIVERY_FEE;
 
-  if (items.length === 0 && checkoutState !== "redirecting") {
+  if (items.length === 0) {
     return (
       <main className="px-6 lg:px-16 py-16 max-w-4xl mx-auto w-full min-h-[60vh] flex flex-col items-center justify-center gap-6">
         <p className="text-[11px] tracking-[0.45em] uppercase opacity-30 font-sans">
@@ -149,18 +148,15 @@ export default function CartPage() {
     );
   }
 
-  if (checkoutState === "redirecting") {
-    return (
-      <main className="px-6 py-16 max-w-4xl mx-auto w-full min-h-[60vh] flex items-center justify-center">
-        <p className="text-[11px] tracking-[0.45em] uppercase opacity-40 font-sans animate-pulse">
-          Redirecting to payment&hellip;
-        </p>
-      </main>
-    );
-  }
-
   return (
-    <main className="px-6 lg:px-16 py-16 max-w-6xl mx-auto w-full">
+    <main className="px-6 lg:px-16 py-16 max-w-6xl mx-auto w-full relative">
+      {checkoutState === "redirecting" && (
+        <div className="fixed inset-0 z-50 bg-[var(--bg)]/90 backdrop-blur-sm flex items-center justify-center">
+          <p className="text-[11px] tracking-[0.45em] uppercase opacity-40 font-sans animate-pulse">
+            Redirecting to payment&hellip;
+          </p>
+        </div>
+      )}
 
       <div className="mb-10 flex items-baseline justify-between">
         <h1 className="text-3xl md:text-4xl font-serif font-light">Your Cart</h1>
