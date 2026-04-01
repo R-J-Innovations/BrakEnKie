@@ -3,6 +3,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 
+async function resendInvoice(orderId: string): Promise<void> {
+  const res = await fetch("/api/admin/resend-invoice", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderId }),
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({}));
+    throw new Error(d.error || "Failed to resend");
+  }
+}
+
 type OrderItem = {
   id: string;
   product_name: string;
@@ -42,7 +54,22 @@ export default function AdminOrders() {
   const [session, setSession] = useState<any>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [resending, setResending] = useState<string | null>(null);
+  const [resendMsg, setResendMsg] = useState<{ id: string; ok: boolean } | null>(null);
   const router = useRouter();
+
+  async function handleResend(orderId: string) {
+    setResending(orderId);
+    setResendMsg(null);
+    try {
+      await resendInvoice(orderId);
+      setResendMsg({ id: orderId, ok: true });
+    } catch {
+      setResendMsg({ id: orderId, ok: false });
+    } finally {
+      setResending(null);
+    }
+  }
 
   useEffect(() => {
     async function init() {
@@ -129,6 +156,18 @@ export default function AdminOrders() {
                     >
                       {order.status}
                     </span>
+                    <button
+                      onClick={() => handleResend(order.id)}
+                      disabled={resending === order.id}
+                      title="Resend invoice email"
+                      className="text-[10px] tracking-[0.15em] uppercase font-sans opacity-40 hover:opacity-90 transition-opacity disabled:opacity-20"
+                    >
+                      {resending === order.id
+                        ? "Sending…"
+                        : resendMsg?.id === order.id
+                        ? resendMsg.ok ? "Sent ✓" : "Failed ✗"
+                        : "Resend"}
+                    </button>
                   </div>
                 </div>
 

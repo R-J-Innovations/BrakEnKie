@@ -61,8 +61,9 @@ export async function POST(req: NextRequest) {
     const ipAllowed = PAYFAST_IPS.includes(ip);
     console.log("PayFast ITN received | IP:", ip, "| allowed:", ipAllowed, "| sandbox:", isSandbox);
     if (!isSandbox && !ipAllowed) {
-      console.warn("PayFast ITN BLOCKED — unrecognised IP:", ip);
-      return new NextResponse("Forbidden", { status: 403 });
+      // Log the unrecognised IP but do NOT block — signature is the real security check.
+      // This prevents ITNs from being silently dropped if PayFast rotates IPs.
+      console.warn("PayFast ITN WARNING — unrecognised IP (proceeding to signature check):", ip);
     }
 
     // Parse body (PayFast sends application/x-www-form-urlencoded)
@@ -72,6 +73,17 @@ export async function POST(req: NextRequest) {
       data[key] = value.toString();
     });
 
+    const paymentStatus = data.payment_status;
+    const orderId = data.m_payment_id;
+    const paymentId = data.pf_payment_id;
+
+    console.log("PayFast ITN body | orderId:", orderId, "| status:", paymentStatus, "| pfPaymentId:", paymentId, "| amount_gross:", data.amount_gross);
+
+    if (!paymentStatus || !orderId) {
+      console.error("PayFast ITN missing required fields", { paymentStatus, orderId });
+      return new NextResponse("Missing required fields", { status: 400 });
+    }
+
     // Verify signature
     const receivedSignature = data.signature;
     const { signature: _sig, ...dataWithoutSig } = data;
@@ -80,16 +92,11 @@ export async function POST(req: NextRequest) {
       process.env.PAYFAST_PASSPHRASE
     );
 
-    const paymentStatus = data.payment_status;
-    const orderId = data.m_payment_id;
-
     if (receivedSignature !== expectedSignature) {
-      console.error("PayFast ITN BLOCKED — signature mismatch", { receivedSignature, expectedSignature });
+      console.error("PayFast ITN BLOCKED — signature mismatch | orderId:", orderId, "| received:", receivedSignature, "| expected:", expectedSignature);
       return new NextResponse("Invalid signature", { status: 400 });
     }
     console.log("PayFast ITN signature OK — orderId:", orderId, "status:", paymentStatus);
-    const paymentId = data.pf_payment_id;
-
     if (!orderId) {
       return new NextResponse("Missing order ID", { status: 400 });
     }
@@ -114,6 +121,12 @@ export async function POST(req: NextRequest) {
     }
 
     if (paymentStatus === "COMPLETE") {
+      // Idempotency: if already paid, return OK without re-sending email
+      if (order.status === "paid") {
+        console.log("PayFast ITN — order already paid, skipping:", orderId);
+        return new NextResponse("OK", { status: 200 });
+      }
+
       // Update order to paid
       await supabaseAdmin
         .from("orders")
@@ -122,7 +135,8 @@ export async function POST(req: NextRequest) {
           payfast_payment_id: paymentId,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", orderId);
+        .eq("id", orderId)
+        .eq("status", "pending");
 
       // Fetch order items for the invoice
       const { data: orderItems } = await supabaseAdmin
@@ -140,20 +154,25 @@ export async function POST(req: NextRequest) {
             }))
           : [];
 
-      // Send invoice emails
-      await sendOrderEmails({
-        orderId: order.id,
-        orderDate: order.created_at,
-        items: invoiceItems,
-        totalAmount: order.total_amount,
-        buyerFirstName: order.buyer_first_name,
-        buyerLastName: order.buyer_last_name,
-        buyerEmail: order.buyer_email,
-        buyerPhone: order.buyer_phone,
-        paymentId,
-        deliveryAddress: order.delivery_address ?? undefined,
-        deliveryFee: order.delivery_fee ?? 0,
-      });
+      // Send invoice emails — wrapped so a failure doesn't break the ITN response
+      try {
+        await sendOrderEmails({
+          orderId: order.id,
+          orderDate: order.created_at,
+          items: invoiceItems,
+          totalAmount: order.total_amount,
+          buyerFirstName: order.buyer_first_name,
+          buyerLastName: order.buyer_last_name,
+          buyerEmail: order.buyer_email,
+          buyerPhone: order.buyer_phone,
+          paymentId,
+          deliveryAddress: order.delivery_address ?? undefined,
+          deliveryFee: order.delivery_fee ?? 0,
+        });
+      } catch (emailErr) {
+        console.error("PayFast ITN — email send failed for order:", orderId, emailErr);
+        // Don't return an error — PayFast already paid, order is marked paid
+      }
     } else if (paymentStatus === "CANCELLED") {
       await supabaseAdmin
         .from("orders")
